@@ -1,5 +1,6 @@
 package com.loniquiz.users.entity;
 
+import com.loniquiz.game.lobby.entity.GameLobby;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -43,4 +44,8 @@ public class User {
 
     @Column(name = "profile_image")
     private String profileImage; // 사용자 프로필 이미
+
+    @OneToOne
+    @JoinColumn(name = "lobby_id")
+    private GameLobby gameLobby;
 }
