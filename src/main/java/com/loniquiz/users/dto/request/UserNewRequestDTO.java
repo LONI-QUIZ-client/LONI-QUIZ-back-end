@@ -2,8 +2,10 @@ package com.loniquiz.users.dto.request;
 
 import com.loniquiz.users.entity.User;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Size;
+import java.beans.Encoder;
 
 @Setter
 @Getter
@@ -21,10 +23,10 @@ public class UserNewRequestDTO {
     private String nickname;
     private String profile; // 이미지
 
-    public User isEntity(){
+    public User isEntity(PasswordEncoder encoder){
         return User.builder()
                 .id(this.id)
-                .pw(this.pw)
+                .pw(encoder.encode(this.pw))
                 .nickname(this.nickname)
                 .profileImage(this.profile)
                 .build();
