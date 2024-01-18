@@ -55,5 +55,15 @@ public class UserService {
         return "성공";
     }
 
-    public
+
+    // 회원 탈퇴 기능
+    public boolean delete(String id){
+        if (id != null){
+            userRepository.deleteById(id);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

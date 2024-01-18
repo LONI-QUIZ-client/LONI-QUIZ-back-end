@@ -99,4 +99,26 @@ public class UserController {
                         "SUCCESS"
                 );
     }
+
+    // 회원 탈퇴 컨트롤러
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(
+            @PathVariable String id
+    ){
+        boolean flag = userService.delete(id);
+
+        if (flag){ // 삭제 정상 처리
+            return ResponseEntity.ok()
+                    .body(
+                            "삭제 완료띠"
+                    );
+        }
+
+        else{ // 삭제 실패
+            return ResponseEntity.badRequest()
+                    .body(
+                            "아이디 값을 한번 확인해 보자"
+                    );
+        }
+    }
 }
