@@ -25,7 +25,7 @@ public class GameLobby {
     private String title; // 사용자가 정한 게임 제목?
 
     @Column(name = "lobby_max_round", nullable = false)
-    private String lobbyMaxRound; // 사용자가 정한 최대 라운드
+    private int lobbyMaxRound; // 사용자가 정한 최대 라운드
 
     @Column(name = "lobby_secret")
     private boolean secret; // 비밀방 or 공개방
@@ -40,6 +40,6 @@ public class GameLobby {
     private int maxCount;
 
     @OneToOne
-    @Column(name = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 }

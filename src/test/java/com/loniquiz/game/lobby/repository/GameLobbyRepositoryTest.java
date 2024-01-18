@@ -1,5 +1,6 @@
 package com.loniquiz.game.lobby.repository;
 
+import com.loniquiz.game.lobby.entity.GameLobby;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,13 @@ class GameLobbyRepositoryTest {
     GameLobbyRepository gameLobbyRepository;
 
     @Test
-    @DisplayName("회원 한명이 ")
+    @DisplayName("회원 한명이 방 생성")
     void makeLobbyTest() {
         //given
-
+        GameLobby.builder()
+                .title("여기 게임 존잼입니다.!")
+                .lobbyMaxRound(3)
+                .build();
         //when
 
         //then
