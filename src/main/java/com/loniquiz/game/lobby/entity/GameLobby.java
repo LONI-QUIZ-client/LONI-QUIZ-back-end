@@ -2,6 +2,7 @@ package com.loniquiz.game.lobby.entity;
 
 import com.loniquiz.users.entity.User;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -17,9 +18,10 @@ import javax.persistence.*;
 @Table(name = "tbl_game_lobby")
 public class GameLobby {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uid")
+    @GenericGenerator(strategy = "uuid", name = "uid")
     @Column(name = "lobby_id")
-    private Long Id; // pk를 위한 유일한 값
+    private String Id; // pk를 위한 유일한 값
 
     @Column(name = "lobby_title", nullable = false)
     private String title; // 사용자가 정한 게임 제목?
@@ -37,7 +39,7 @@ public class GameLobby {
     private int userCount; // 방에 들어온 회원 수
 
     @Column(name = "lobby_max_count", nullable = false)
-    private int maxCount;
+    private int maxCount; // 방 최대 인원 설정 값
 
     @OneToOne
     @JoinColumn(name = "user_id")
