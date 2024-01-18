@@ -1,5 +1,6 @@
 package com.loniquiz.game.lobby.entity;
 
+import com.loniquiz.users.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,4 +39,7 @@ public class GameLobby {
     @Column(name = "lobby_max_count", nullable = false)
     private int maxCount;
 
+    @OneToOne
+    @Column(name = "user_id")
+    private User user;
 }

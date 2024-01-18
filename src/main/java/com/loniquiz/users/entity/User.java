@@ -44,8 +44,4 @@ public class User {
 
     @Column(name = "profile_image")
     private String profileImage; // 사용자 프로필 이미
-
-    @OneToOne
-    @JoinColumn(name = "lobby_id")
-    private GameLobby gameLobby;
 }
