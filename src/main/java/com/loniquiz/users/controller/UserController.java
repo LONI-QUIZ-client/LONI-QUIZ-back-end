@@ -1,5 +1,6 @@
 package com.loniquiz.users.controller;
 
+import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.service.UserService;
@@ -67,5 +68,35 @@ public class UserController {
                     );
         }
 
+    }
+
+
+    // 로그인 처리 컨트롤러
+    @GetMapping("/login")
+    public ResponseEntity<?> loginUser(
+            @RequestBody UserLoginRequestDTO dto
+    ){
+        
+        String loginStatus = userService.login(dto);
+
+
+        if (loginStatus.equals("아이디가 틀림")){ // 아이디가 틀림
+            return ResponseEntity.ok()
+                    .body(
+                            "NOID"
+                    );
+        }
+
+        if (loginStatus.equals("비밀번호가 틀림")){ // 비밀번호가 틀림
+            return ResponseEntity.ok()
+                    .body(
+                            "NOPW"
+                    );
+        }
+
+        return ResponseEntity.ok() // 로그인 성공시
+                .body(
+                        "SUCCESS"
+                );
     }
 }
