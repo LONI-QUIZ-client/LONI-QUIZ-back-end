@@ -2,9 +2,11 @@ package com.loniquiz.game.lobby.entity;
 
 import com.loniquiz.users.entity.User;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -26,6 +28,10 @@ public class GameLobby {
     @Column(name = "lobby_title", nullable = false)
     private String title; // 사용자가 정한 게임 제목?
 
+    @CreationTimestamp
+    @Column(name = "lobby_create_date")
+    private LocalDateTime createDate; // 방 생성 날짜
+
     @Column(name = "lobby_max_round", nullable = false)
     private int lobbyMaxRound; // 사용자가 정한 최대 라운드
 
@@ -39,7 +45,7 @@ public class GameLobby {
     private int userCount; // 방에 들어온 회원 수
 
     @Column(name = "lobby_max_count", nullable = false)
-    private int maxCount; // 방 최대 인원 설정 값
+    private int maxCount; // 방 최대 인원 설정
 
     @OneToOne
     @JoinColumn(name = "user_id")
