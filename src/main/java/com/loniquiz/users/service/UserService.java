@@ -1,5 +1,6 @@
 package com.loniquiz.users.service;
 
+import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.entity.User;
@@ -33,7 +34,12 @@ public class UserService {
     }
 
     // 로그인 처리
-    public String login(){
+    public String login(UserLoginRequestDTO dto){
+        User user = userRepository.findById(dto.getId()).orElseThrow();
+
+
+
+
         return "";
     }
 }
