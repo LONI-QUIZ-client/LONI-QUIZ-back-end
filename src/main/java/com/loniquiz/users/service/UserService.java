@@ -30,6 +30,10 @@ public class UserService {
         }else { // 회원가입 할때 값을 좆 같이 주면 노 저장
             return false;
         }
+    }
 
+    // 로그인 처리
+    public String login(){
+        return "";
     }
 }

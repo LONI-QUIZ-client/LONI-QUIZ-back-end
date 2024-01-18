@@ -6,6 +6,8 @@ import com.loniquiz.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,9 +38,19 @@ public class UserController {
 
     // 회원가입을 위한 컨트롤러
     @PostMapping
-    public ResponseEntity<?> loginUser(
+    public ResponseEntity<?> newUserCreate(
+            @Validated
             @RequestBody UserNewRequestDTO dto
+            , BindingResult result
     ){
+        // 입력 값 검증에 걸리면 안 됌 ㅠㅠㅠㅠ
+        if (result.hasErrors()){
+            return ResponseEntity.badRequest()
+                    .body(
+                            result.getFieldError()
+                    );
+        }
+
         boolean login = userService.newUser(dto);
 
         log.info("회원가입을 위한 post매핑 접속 dto : {}", dto);
