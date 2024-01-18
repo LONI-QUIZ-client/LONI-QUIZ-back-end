@@ -1,5 +1,6 @@
 package com.loniquiz.users.service;
 
+import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     // 회원 단일 정보 조회
-    public User detail(String id){
-        return userRepository.findById(id).orElseThrow();
+    public UserDetailResponseDTO detail(String id){
+        User user = userRepository.findById(id).orElseThrow();
+        return new UserDetailResponseDTO(user);
     }
 }

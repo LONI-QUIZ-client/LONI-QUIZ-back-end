@@ -1,5 +1,6 @@
 package com.loniquiz.users.controller;
 
+import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +23,15 @@ public class UserController {
     // 회원 단일 조회를 위한 컨트롤러
     @GetMapping("/{id}")
     public ResponseEntity<?> detailUser(@PathVariable String id){
-        User user = userService.detail(id);
-
-        return ResponseEntity.ok()
-                .body(
-                        user
-                );
+        try{
+            UserDetailResponseDTO user = userService.detail(id);
+            return ResponseEntity.ok()
+                    .body(
+                            user
+                    );
+        }catch (Exception e){
+            return ResponseEntity.internalServerError()
+                    .body(e.getMessage());
+        }
     }
 }
