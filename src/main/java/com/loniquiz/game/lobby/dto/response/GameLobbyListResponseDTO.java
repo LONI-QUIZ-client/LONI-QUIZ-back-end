@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GamLobbyListResponseDTO {
+public class GameLobbyListResponseDTO {
     private int pageMaxCount; // 페이지에 마지막
     private List<GameLobbyResponseDTO> dto;
 }

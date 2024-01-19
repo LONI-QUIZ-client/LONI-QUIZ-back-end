@@ -1,6 +1,7 @@
 package com.loniquiz.game.lobby.service;
 
-import com.loniquiz.game.lobby.dto.response.GamLobbyListResponseDTO;
+import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
+import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyResponseDTO;
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
@@ -24,7 +25,7 @@ public class GameLobbyService {
 
 
     // 페이징 처리한 게임 방 보여주기
-    public GamLobbyListResponseDTO gameAllList(PageRequestDTO dto){
+    public GameLobbyListResponseDTO gameAllList(PageRequestDTO dto){
 
         PageRequest pageInfo = PageRequest.of(
                 dto.getPage() - 1, dto.getAmount()
@@ -42,13 +43,31 @@ public class GameLobbyService {
                 .map(gameLobby -> new GameLobbyResponseDTO(gameLobby))
                 .collect(Collectors.toList());
 
-        return GamLobbyListResponseDTO.builder()
+        return GameLobbyListResponseDTO.builder()
                 .pageMaxCount(gamePageList.getTotalPages())
                 .dto(lobbyResponseDTO)
                 .build();
     }
 
 
-    // 방 생성하기
-    public
+    /**
+     * 방 생성 처리입니다. 승한이형
+     * @param dto - 클라이언트가 준 값
+     * @param pageRequest - 이거는 방을 다시 조회해야하는데 조회할때
+     *                    필요한 매개변수여서 억지로 끼워넣었습니다.
+     *                    같이 해결해주세요 승한이형
+     * @return - 저장하고 다시 조회된 방
+     */
+    public GameLobbyListResponseDTO createGameLobby(GameLobbyCreateDTO dto, PageRequestDTO pageRequest){
+
+        if (dto == null){
+            log.warn("방 생성 중 값이 null이다 dto : {}", dto);
+        }
+
+
+        gameLobbyRepository.save(dto.toEntity());
+
+        return gameAllList(pageRequest);
+    }
+
 }
