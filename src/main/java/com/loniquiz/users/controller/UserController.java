@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@CrossOrigin(origins = {"http://localhost:8888"}, allowCredentials = "true")
 public class UserController {
     private final UserService userService;
 

@@ -47,4 +47,8 @@ public class GameLobbyService {
                 .dto(lobbyResponseDTO)
                 .build();
     }
+
+
+    // 방 생성하기
+    public
 }

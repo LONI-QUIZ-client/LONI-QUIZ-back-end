@@ -20,6 +20,8 @@ import java.util.List;
 public class GameLobbyController {
     private final GameLobbyService gameLobbyService;
 
+
+    // 게임 방 전체 조회
     @GetMapping
     public ResponseEntity<?> gameListView(PageRequestDTO dto){
         GamLobbyListResponseDTO gameLobbies = gameLobbyService.gameAllList(dto);
