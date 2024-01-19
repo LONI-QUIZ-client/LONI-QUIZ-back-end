@@ -75,7 +75,7 @@ public class UserController {
     // 로그인 처리 컨트롤러
     @GetMapping("/login")
     public ResponseEntity<?> loginUser(
-            @RequestBody UserLoginRequestDTO dto
+             UserLoginRequestDTO dto
     ){
 
         String loginStatus = userService.login(dto);
