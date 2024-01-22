@@ -86,7 +86,16 @@ class GameLobbyRepositoryTest {
 
     }
 
-    
+    @Test
+    @DisplayName("방 들어가면 회원 한명 들어오기 성공하기")
+    void upUserCountTest() {
+        //given
+        String id = "ff8080818d2fb59f018d2fc0265b0000";
+        //when
+        gameLobbyRepository.upUserCount(id);
+        //then
+    }
+
 
 
 

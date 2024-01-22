@@ -1,6 +1,9 @@
 package com.loniquiz.game.lobby.dto.response;
 
+
 import lombok.*;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -9,8 +12,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GameLobbyDetailResponseDTO {
-    private String title;
-    private int maxCount;
-    private int userCount;
+public class GameDetailResponseDTO {
+    int score;
+    List<GameLobbyDetailResponseDTO> game;
+    List<UserDetailResponseDTO> users;
 }

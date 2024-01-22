@@ -7,6 +7,8 @@ import com.loniquiz.game.lobby.dto.response.GameLobbyResponseDTO;
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
+import com.loniquiz.game.room.entity.GameRoom;
+import com.loniquiz.game.room.repository.GameRoomRepository;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class GameLobbyService {
     private final GameLobbyRepository gameLobbyRepository;
     private final UserRepository userRepository;
+    private final GameRoomRepository gameRoomRepository;
 
 
     // 페이징 처리한 게임 방 보여주기
@@ -100,6 +103,24 @@ public class GameLobbyService {
                 = gameLobbyRepository.findById(gno).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
 
+
+        // 사용자가 현재 방에 들어갔는지 아닌지 확인을 위한 변수
+        boolean flag =
+                gameRoomRepository.existsByUserAndGameLobby(user, gameLobby);
+
+        if (!flag){ // 존재하지 않다면
+
+            // 게임 들어 올시 tb_game_room 디비에 저장
+            GameRoom gameRoom = GameRoom.builder()
+                    .gameLobby(gameLobby)
+                    .user(user)
+                    .build();
+
+            gameRoomRepository.save(gameRoom);
+
+            gameLobbyRepository.upUserCount(gno); // 카운트 증가
+
+        }
     }
 
 }

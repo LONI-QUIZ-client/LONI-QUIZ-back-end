@@ -19,7 +19,7 @@ public interface GameLobbyRepository extends JpaRepository<GameLobby, String> {
     void deleteWithIdAndUser(@Param("lobbyId") String id, @Param("userId") String user);
 
     //방 들어올때 회원 수 한명 증가
-    @Query(value = "update from tbl_game_lobby set lobby_user_count = lobby_user_count + 1 where lobby_id = :lid",
+    @Query(value = "update tbl_game_lobby set lobby_user_count = lobby_user_count + 1 where lobby_id = :lid",
             nativeQuery = true)
     void upUserCount(String lid);
 }
