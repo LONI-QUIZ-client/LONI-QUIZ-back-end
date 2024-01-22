@@ -104,6 +104,7 @@ public class GameLobbyService {
         User user = userRepository.findById(userId).orElseThrow();
 
 
+
         // 사용자가 현재 방에 들어갔는지 아닌지 확인을 위한 변수
         boolean flag =
                 gameRoomRepository.existsByUserAndGameLobby(user, gameLobby);
@@ -119,7 +120,10 @@ public class GameLobbyService {
             gameRoomRepository.save(gameRoom);
 
             gameLobbyRepository.upUserCount(gno); // 카운트 증가
+        }else{
+            gameRoomRepository.deleteByUserAndGameLobby(user, gameLobby);
 
+            gameLobbyRepository.downUserCount(gno); // 카운트 하락띠
         }
     }
 
