@@ -98,7 +98,7 @@ public class GameLobbyService {
      * 한 회원이 들어가면 user_count가 올르고 다시 나가면 user_count가 줄어들어야 한다.
      * @param gno
      */
-    public void detail(String gno, String userId){
+    public List<GameRoom> detail(String gno, String userId){
         GameLobby gameLobby
                 = gameLobbyRepository.findById(gno).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
@@ -118,12 +118,20 @@ public class GameLobbyService {
                     .build();
 
             gameRoomRepository.save(gameRoom);
-
             gameLobbyRepository.upUserCount(gno); // 카운트 증가
+
+            List<GameRoom> gameLobbys = gameRoomRepository.findByGameLobby(gameLobby);
+
+
+            return gameLobbys;
         }else{
             gameRoomRepository.deleteByUserAndGameLobby(user, gameLobby);
 
             gameLobbyRepository.downUserCount(gno); // 카운트 하락띠
+
+            List<GameRoom> gameLobbys = gameRoomRepository.findByGameLobby(gameLobby);
+
+            return gameLobbys;
         }
     }
 
