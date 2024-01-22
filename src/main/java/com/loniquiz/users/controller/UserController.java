@@ -53,11 +53,11 @@ public class UserController {
                     );
         }
 
-        boolean login = userService.newUser(dto);
+        boolean newUser = userService.newUser(dto);
 
         log.info("회원가입을 위한 post매핑 접속 dto : {}", dto);
 
-        if (!login){ // 회원가입 실패시
+        if (!newUser){ // 회원가입 실패시
             return ResponseEntity.badRequest()
                     .body(
                             "값 똑바로 줘야돼 이거 뜨면 정범준한테 말해"

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,6 +89,17 @@ public class GameLobbyService {
             throw new RuntimeException();
         }
     }
-    
+
+    /**
+     * 방 들어가기 로직인데 쫌 빡세다 ..
+     * 한 회원이 들어가면 user_count가 올르고 다시 나가면 user_count가 줄어들어야 한다.
+     * @param gno
+     */
+    public void detail(String gno, String userId){
+        GameLobby gameLobby
+                = gameLobbyRepository.findById(gno).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+
+    }
 
 }
