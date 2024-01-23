@@ -95,11 +95,11 @@ public class GameLobbyController {
             @PathVariable String gno,
             @PathVariable String userId
     ){
-        List<GameRoom> detail = gameLobbyService.detail(gno, userId);
+        gameLobbyService.detail(gno, userId);
 
 
         return ResponseEntity.ok()
-                .body(detail);
+                .body(null);
     }
 
 }

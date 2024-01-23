@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -62,5 +64,20 @@ class GameRoomRepositoryTest {
         //then
         assertTrue(flag);
     }
+
+    @Test
+    @DisplayName("로비 아이디 게임 정보 조회")
+    void findByGameRoomTest() {
+        //given
+        String id = "ff8080818d31390d018d313975240000";
+        GameLobby gameLobby = gameLobbyRepository.findById(id).orElseThrow();
+        //when
+        List<GameRoom> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
+        //then
+        System.out.println("\n \n \n");
+        System.out.println("byGameLobby = " + byGameLobby);
+        System.out.println("\n \n \n");
+    }
+
 
 }
