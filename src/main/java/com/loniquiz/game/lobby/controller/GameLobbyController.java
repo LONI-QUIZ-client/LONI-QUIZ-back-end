@@ -5,6 +5,7 @@ import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.service.GameLobbyService;
+import com.loniquiz.game.room.entity.GameRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.server.ExportException;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -86,6 +88,18 @@ public class GameLobbyController {
             return ResponseEntity.internalServerError()
                     .body(e.getMessage());
         }
+    }
+
+    @GetMapping("/gno/{gno}/id/{userId}")
+    public ResponseEntity<?> gameRoomDetail(
+            @PathVariable String gno,
+            @PathVariable String userId
+    ){
+        List<GameRoom> detail = gameLobbyService.detail(gno, userId);
+
+
+        return ResponseEntity.ok()
+                .body(detail);
     }
 
 }

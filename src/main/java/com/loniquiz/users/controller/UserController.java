@@ -73,7 +73,7 @@ public class UserController {
 
 
     // 로그인 처리 컨트롤러
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(
              @RequestBody UserLoginRequestDTO dto
     ){

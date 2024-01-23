@@ -5,6 +5,7 @@ import com.loniquiz.users.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,6 +16,7 @@ public interface GameLobbyRepository extends JpaRepository<GameLobby, String> {
     Page<GameLobby> findAll(Pageable pageable);
 
     // 방을 삭제할때는 user_id와 방에 lobby_id 값이 같아야지만 삭제가 가능하다.
+
     @Query(value = "delete from tbl_game_lobby where lobby_id = :lobbyId and user_id = :userId", nativeQuery = true)
     void deleteWithIdAndUser(@Param("lobbyId") String id, @Param("userId") String user);
 
