@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Builder
 
 @Entity
-@Table(name = "tbl_game_room")
+@Table(name = "tbl_game_members")
 public class GameRoom {
     @Id
     @GeneratedValue(generator = "uid")
