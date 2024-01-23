@@ -3,6 +3,7 @@ package com.loniquiz.users.controller;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
+import com.loniquiz.users.dto.response.UserResponseDTO;
 import com.loniquiz.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,28 +78,16 @@ public class UserController {
     public ResponseEntity<?> loginUser(
              @RequestBody UserLoginRequestDTO dto
     ){
+        try{
+            UserResponseDTO loginStatus = userService.login(dto);
 
-        String loginStatus = userService.login(dto);
-
-
-        if (loginStatus.equals("아이디가 틀림")){ // 아이디가 틀림
             return ResponseEntity.ok()
                     .body(
-                            "NOID"
+                            loginStatus
                     );
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        if (loginStatus.equals("비밀번호가 틀림")){ // 비밀번호가 틀림
-            return ResponseEntity.ok()
-                    .body(
-                            "NOPW"
-                    );
-        }
-
-        return ResponseEntity.ok() // 로그인 성공시
-                .body(
-                        "SUCCESS"
-                );
     }
 
     // 회원 탈퇴 컨트롤러

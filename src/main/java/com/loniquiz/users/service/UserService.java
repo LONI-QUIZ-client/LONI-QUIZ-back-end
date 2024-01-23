@@ -3,6 +3,7 @@ package com.loniquiz.users.service;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
+import com.loniquiz.users.dto.response.UserResponseDTO;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,23 +37,20 @@ public class UserService {
     }
 
     // 로그인 처리
-    public String login(UserLoginRequestDTO dto){
-        User user = userRepository.findById(dto.getId()).orElseThrow();
+    public UserResponseDTO login(UserLoginRequestDTO dto){
+        User user = userRepository.findById(dto.getId()).orElseThrow(
+                () -> new RuntimeException("아이디가 존재하지 않습니다")
+        );
 
-        String userId = user.getId();
-
-        if (!userId.equals(dto.getId())){
-            return "아이디가 틀림";
-        }
 
         String userPw = dto.getPw();
         String encodingPw = user.getPw();
 
         if (!encoder.matches(userPw, encodingPw)){
-            return "비밀번호가 틀림";
+            throw new RuntimeException("비밀번호가 일치하지 않습니다");
         }
 
-        return "성공";
+        return new UserResponseDTO(user);
     }
 
 
