@@ -1,5 +1,6 @@
 package com.loniquiz.users.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.room.entity.GameRoom;
 import lombok.*;

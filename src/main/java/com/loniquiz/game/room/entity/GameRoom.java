@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Setter
 @Getter
-//@ToString
+@ToString(exclude = {"user"})
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor

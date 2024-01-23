@@ -2,8 +2,7 @@ package com.loniquiz.game.lobby.service;
 
 import com.loniquiz.game.lobby.dto.request.DeleteLobbyDTO;
 import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
-import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
-import com.loniquiz.game.lobby.dto.response.GameLobbyResponseDTO;
+import com.loniquiz.game.lobby.dto.response.*;
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
@@ -11,6 +10,7 @@ import com.loniquiz.game.room.entity.GameRoom;
 import com.loniquiz.game.room.repository.GameRoomRepository;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
+import com.loniquiz.utils.DateChangeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -98,7 +98,7 @@ public class GameLobbyService {
      * 한 회원이 들어가면 user_count가 올르고 다시 나가면 user_count가 줄어들어야 한다.
      * @param gno
      */
-    public void detail(String gno, String userId){
+    public void isUserCheck(String gno, String userId){
         GameLobby gameLobby
                 = gameLobbyRepository.findById(gno).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
@@ -127,9 +127,32 @@ public class GameLobbyService {
             gameRoomRepository.deleteByUserAndGameLobby(user, gameLobby);
 
             gameLobbyRepository.downUserCount(gno); // 카운트 하락띠
-
-
         }
+    }
+
+    // 값 전달을 위한 처리
+    public GameDetailDTO detail(String gno){
+        GameLobby gameLobby = gameLobbyRepository.findById(gno).orElseThrow();
+
+        List<GameRoom> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
+
+        List<GameRoomUserResponseDTO> collect = byGameLobby.stream()
+                .map(gameRoom -> new GameRoomUserResponseDTO(gameRoom))
+                .collect(Collectors.toList());
+
+        GameLobbyDetailDTO dto = GameLobbyDetailDTO.builder()
+                .lobbyId(gameLobby.getId())
+                .title(gameLobby.getTitle())
+                .maxRound(gameLobby.getLobbyMaxRound())
+                .createDate(DateChangeUtil.postDateChang(gameLobby.getCreateDate()))
+                .build();
+
+
+
+        return GameDetailDTO.builder()
+                .users(collect)
+                .gameLobby(dto)
+                .build();
     }
 
 }
