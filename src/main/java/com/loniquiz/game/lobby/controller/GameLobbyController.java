@@ -88,21 +88,3 @@ public class GameLobbyController {
     }
 
 
-    // 값 전달을 위한 처리
-    @GetMapping("/gameRoom")
-    public ResponseEntity<?> gameRoomDetail(
-            @RequestBody GameRoomRequestDTO dto
-    ) {
-        GameDetailDTO userCheck = gameLobbyService.isUserCheck(dto);
-
-
-        log.info("detail : {}", userCheck);
-
-
-        return ResponseEntity.ok()
-                .body(
-                        userCheck
-                );
-    }
-
-}

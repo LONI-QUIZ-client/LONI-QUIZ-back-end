@@ -64,4 +64,20 @@ public class UserService {
             return false;
         }
     }
+
+
+    public boolean isDuplicateId(String type, String keyword){
+
+        if (type.equals("id")){
+            boolean flag = userRepository.existsById(keyword);
+            return flag;
+        }
+
+        if (type.equals("nickname")){
+            boolean flag = userRepository.existsByNickname(keyword);
+            return flag;
+        }
+
+        return false;
+    }
 }

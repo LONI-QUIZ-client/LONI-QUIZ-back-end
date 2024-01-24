@@ -1,4 +1,4 @@
-package com.loniquiz.game.room.entity;
+package com.loniquiz.game.members.entity;
 
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.users.entity.User;
@@ -17,7 +17,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "tbl_game_members")
-public class GameRoom {
+public class GameMembers {
     @Id
     @GeneratedValue(generator = "uid")
     @GenericGenerator(strategy = "uuid", name = "uid")

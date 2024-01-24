@@ -1,8 +1,8 @@
-package com.loniquiz.game.room.repository;
+package com.loniquiz.game.members.repository;
 
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
-import com.loniquiz.game.room.entity.GameRoom;
+import com.loniquiz.game.members.entity.GameMembers;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ class GameRoomRepositoryTest {
     @Autowired
     GameLobbyRepository gameLobbyRepository;
     @Autowired
-    GameRoomRepository gameRoomRepository;
+    GameMembersRepository gameRoomRepository;
 
     @Test
     @DisplayName("게임 방에 사람 넣기")
@@ -36,12 +36,12 @@ class GameRoomRepositoryTest {
         GameLobby gameLobby =
                 gameLobbyRepository.findById("ff8080818d2fb59f018d2fc0265b0000").orElseThrow();
 
-        GameRoom rm = GameRoom.builder()
+        GameMembers rm = GameMembers.builder()
                 .user(user)
                 .gameLobby(gameLobby)
                 .build();
         //when
-        GameRoom save = gameRoomRepository.save(rm);
+        GameMembers save = gameRoomRepository.save(rm);
         //then
         System.out.println();
         System.out.println("save = " + save);
@@ -72,7 +72,7 @@ class GameRoomRepositoryTest {
         String id = "ff8080818d31390d018d313975240000";
         GameLobby gameLobby = gameLobbyRepository.findById(id).orElseThrow();
         //when
-        List<GameRoom> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
+        List<GameMembers> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
         //then
         System.out.println("\n \n \n");
         System.out.println("byGameLobby = " + byGameLobby);
