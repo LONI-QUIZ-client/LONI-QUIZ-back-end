@@ -1,10 +1,8 @@
 package com.loniquiz.users.entity;
 
 <<<<<<< HEAD
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.loniquiz.game.lobby.entity.GameLobby;
 =======
-import com.loniquiz.game.lobby.entity.LobbyChat;
+import com.loniquiz.comment.game.entity.LobbyChat;
 >>>>>>> origin/main
 import com.loniquiz.game.room.entity.GameRoom;
 import lombok.*;

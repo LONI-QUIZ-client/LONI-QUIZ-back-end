@@ -1,6 +1,6 @@
 package com.loniquiz.game.lobby.dto.response;
 
-import com.loniquiz.game.lobby.entity.LobbyChat;
+import com.loniquiz.comment.game.entity.LobbyChat;
 import com.loniquiz.users.entity.User;
 import lombok.*;
 
