@@ -2,6 +2,7 @@ package com.loniquiz.game.lobby.controller;
 
 import com.loniquiz.game.lobby.dto.request.DeleteLobbyDTO;
 import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
+import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.GameDetailDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
@@ -93,21 +94,19 @@ public class GameLobbyController {
 
 
     // 값 전달을 위한 처리
-    @GetMapping("/gno/{gno}/id/{userId}")
+    @GetMapping("/gameRoom")
     public ResponseEntity<?> gameRoomDetail(
-            @PathVariable String gno,
-            @PathVariable String userId
+            @RequestBody GameRoomRequestDTO dto
     ){
-        gameLobbyService.isUserCheck(gno, userId);
+        GameDetailDTO userCheck = gameLobbyService.isUserCheck(dto);
 
-        GameDetailDTO detail = gameLobbyService.detail(gno);
 
-        log.info("detail : {}", detail);
+        log.info("detail : {}", userCheck);
 
 
         return ResponseEntity.ok()
                 .body(
-                        detail
+                        userCheck
                 );
     }
 

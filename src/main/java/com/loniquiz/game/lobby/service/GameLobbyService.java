@@ -2,6 +2,7 @@ package com.loniquiz.game.lobby.service;
 
 import com.loniquiz.game.lobby.dto.request.DeleteLobbyDTO;
 import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
+import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.*;
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
@@ -96,12 +97,11 @@ public class GameLobbyService {
     /**
      * 방 들어가기 로직인데 쫌 빡세다 ..
      * 한 회원이 들어가면 user_count가 올르고 다시 나가면 user_count가 줄어들어야 한다.
-     * @param gno
      */
-    public void isUserCheck(String gno, String userId){
+    public GameDetailDTO isUserCheck(GameRoomRequestDTO dto){
         GameLobby gameLobby
-                = gameLobbyRepository.findById(gno).orElseThrow();
-        User user = userRepository.findById(userId).orElseThrow();
+                = gameLobbyRepository.findById(dto.getGno()).orElseThrow();
+        User user = userRepository.findById(dto.getUserId()).orElseThrow();
 
 
 
@@ -118,15 +118,15 @@ public class GameLobbyService {
                     .build();
 
             gameRoomRepository.save(gameRoom);
-            gameLobbyRepository.upUserCount(gno); // 카운트 증가
-            
-            //로비 아이디로 방을 찾아 뿌려주기
-            List<GameRoom> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
+            gameLobbyRepository.upUserCount(dto.getGno()); // 카운트 증가
 
+            return detail(gno);
         }else{
             gameRoomRepository.deleteByUserAndGameLobby(user, gameLobby);
 
             gameLobbyRepository.downUserCount(gno); // 카운트 하락띠
+
+            return detail(gno);
         }
     }
 
@@ -134,11 +134,14 @@ public class GameLobbyService {
     public GameDetailDTO detail(String gno){
         GameLobby gameLobby = gameLobbyRepository.findById(gno).orElseThrow();
 
+
         List<GameRoom> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
+
 
         List<GameRoomUserResponseDTO> collect = byGameLobby.stream()
                 .map(gameRoom -> new GameRoomUserResponseDTO(gameRoom))
                 .collect(Collectors.toList());
+
 
         GameLobbyDetailDTO dto = GameLobbyDetailDTO.builder()
                 .lobbyId(gameLobby.getId())
@@ -146,7 +149,6 @@ public class GameLobbyService {
                 .maxRound(gameLobby.getLobbyMaxRound())
                 .createDate(DateChangeUtil.postDateChang(gameLobby.getCreateDate()))
                 .build();
-
 
 
         return GameDetailDTO.builder()
