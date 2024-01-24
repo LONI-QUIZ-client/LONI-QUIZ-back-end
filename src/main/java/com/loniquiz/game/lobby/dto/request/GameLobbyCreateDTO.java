@@ -1,4 +1,4 @@
-package com.loniquiz.comment.lobby.dto.request;
+package com.loniquiz.game.lobby.dto.request;
 
 
 import com.loniquiz.game.lobby.entity.GameLobby;
