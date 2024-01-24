@@ -2,19 +2,14 @@ package com.loniquiz.game.lobby.service;
 
 import com.loniquiz.game.lobby.dto.request.DeleteLobbyDTO;
 import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
-<<<<<<< HEAD
 import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.*;
-=======
 import com.loniquiz.game.lobby.dto.request.LobbyChatCreateRequestDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyResponseDTO;
-import com.loniquiz.game.lobby.dto.response.LobbyChatListResponseDTO;
-import com.loniquiz.game.lobby.dto.response.LobbyChatResponseDTO;
->>>>>>> origin/main
+
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
-import com.loniquiz.game.lobby.entity.LobbyChat;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
 import com.loniquiz.game.lobby.repository.LobbyChatRepository;
 import com.loniquiz.game.room.entity.GameRoom;
@@ -139,10 +134,6 @@ public class GameLobbyService {
 
             return detail(dto.getGno());
         }
-    }
-    // 채팅 입력하기
-    public void create(LobbyChatCreateRequestDTO dto) {
-        lobbyChatRepository.save(dto.toEntity());
     }
 
     // 값 전달을 위한 처리
