@@ -10,8 +10,8 @@ import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
 import com.loniquiz.comment.lobby.repository.LobbyChatRepository;
-import com.loniquiz.game.room.entity.GameRoom;
-import com.loniquiz.game.room.repository.GameRoomRepository;
+import com.loniquiz.game.members.entity.GameMembers;
+import com.loniquiz.game.members.repository.GameMembersRepository;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import com.loniquiz.utils.DateChangeUtil;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class GameLobbyService {
     private final GameLobbyRepository gameLobbyRepository;
     private final UserRepository userRepository;
-    private final GameRoomRepository gameRoomRepository;
+    private final GameMembersRepository gameRoomRepository;
     private final LobbyChatRepository lobbyChatRepository;
 
 
@@ -115,7 +115,7 @@ public class GameLobbyService {
         if (!flag){ // 존재하지 않다면
 
             // 게임 들어 올시 tb_game_room 디비에 저장
-            GameRoom gameRoom = GameRoom.builder()
+            GameMembers gameRoom = GameMembers.builder()
                     .gameLobby(gameLobby)
                     .user(user)
                     .build();
@@ -138,7 +138,7 @@ public class GameLobbyService {
         GameLobby gameLobby = gameLobbyRepository.findById(gno).orElseThrow();
 
 
-        List<GameRoom> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
+        List<GameMembers> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
 
 
         List<GameRoomUserResponseDTO> collect = byGameLobby.stream()

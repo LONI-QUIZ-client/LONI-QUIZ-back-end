@@ -1,7 +1,7 @@
 package com.loniquiz.game.lobby.dto.response;
 
 
-import com.loniquiz.game.room.entity.GameRoom;
+import com.loniquiz.game.members.entity.GameMembers;
 import lombok.*;
 
 @Setter
@@ -16,7 +16,7 @@ public class GameRoomUserResponseDTO {
     private String userNickname;
     private String profile;
 
-    public GameRoomUserResponseDTO(GameRoom gameRoom){
+    public GameRoomUserResponseDTO(GameMembers gameRoom){
         this.userId = gameRoom.getUser().getId();
         this.userNickname = gameRoom.getUser().getNickname();
         this.profile = gameRoom.getUser().getProfileImage();

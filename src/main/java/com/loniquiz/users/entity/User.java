@@ -1,6 +1,6 @@
 package com.loniquiz.users.entity;
 import com.loniquiz.comment.lobby.entity.LobbyChat;
-import com.loniquiz.game.room.entity.GameRoom;
+import com.loniquiz.game.members.entity.GameMembers;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -47,7 +47,7 @@ public class User {
     private String profileImage; // 사용자 프로필 이미
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<GameRoom> gameRooms = new ArrayList<>();
+    private List<GameMembers> gameRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<LobbyChat> lobbyChats = new ArrayList<>();
