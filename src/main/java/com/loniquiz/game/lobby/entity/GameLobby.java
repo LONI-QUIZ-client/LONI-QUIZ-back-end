@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 
 @Entity
-@Table(name = "tbl_game_lobby")
+@Table(name = "tbl_game_room")
 public class GameLobby {
     @Id
     @GeneratedValue(generator = "uid")
@@ -42,10 +42,10 @@ public class GameLobby {
     private String lobby_code; // 비번방시 필요한 code값
 
     @Column(name = "lobby_user_count", nullable = false)
-    private int userCount; // 방에 들어온 회원 수
+    private int userCount; // 로비에 들어온 회원 수
 
     @Column(name = "lobby_max_count", nullable = false)
-    private int maxCount; // 방 최대 인원 설정
+    private int maxCount; // 로비 최대 인원 설정
 
     @OneToOne
     @JoinColumn(name = "user_id")

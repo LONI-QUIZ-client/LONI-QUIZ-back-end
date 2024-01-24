@@ -1,10 +1,9 @@
 package com.loniquiz.users.entity;
 
-import com.loniquiz.game.lobby.entity.GameLobby;
+import com.loniquiz.game.lobby.entity.LobbyChat;
 import com.loniquiz.game.room.entity.GameRoom;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -51,4 +50,6 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<GameRoom> gameRooms = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<LobbyChat> lobbyChats = new ArrayList<>();
 }
