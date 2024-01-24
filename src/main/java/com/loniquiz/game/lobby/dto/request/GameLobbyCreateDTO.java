@@ -22,18 +22,17 @@ public class GameLobbyCreateDTO {
     private String title;
     private int lobbyMaxRound;
     private boolean secret;
-    private int userCount;
     private int maxCount;
     private String userId;
 
 
-    public GameLobby toEntity(User user){
+    public GameLobby toEntity(User user, String uuid){
         return GameLobby.builder()
                 .title(this.title)
                 .lobbyMaxRound(this.lobbyMaxRound)
                 .secret(this.secret)
-                .userCount(this.userCount)
                 .maxCount(this.maxCount)
+                .lobby_code(uuid)
                 .user(user)
                 .build();
     }

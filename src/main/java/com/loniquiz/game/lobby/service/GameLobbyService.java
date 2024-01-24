@@ -10,6 +10,7 @@ import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
 
+import com.loniquiz.game.members.entity.GameMembers;
 import com.loniquiz.game.members.repository.GameMembersRepository;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,9 +87,30 @@ public class GameLobbyService {
             throw new RuntimeException("방을 이미 한번 만드셨어요");
         }
 
-        gameLobbyRepository.save(dto.toEntity(user));
+
+        String uuid = null;
+        if (dto.isSecret()){ // 비번 방인 경우 비번 생성
+            uuid = String.valueOf(UUID.randomUUID());
+        }
+
+        GameLobby save = gameLobbyRepository.save(dto.toEntity(user, uuid));
+
+        // 방 만든 사람은 자동 멤버로 참여
+        autoSaveMember(user, save);
+
 
         return gameAllList(pageRequest);
+    }
+
+
+    // 방 만든 사람은 자동 멤버로 참여 처리
+    public void autoSaveMember(User user, GameLobby gameLobby){
+        GameMembers gameMember = GameMembers.builder()
+                .gameLobby(gameLobby)
+                .user(user)
+                .build();
+
+        gameMembersRepository.save(gameMember);
     }
 
 

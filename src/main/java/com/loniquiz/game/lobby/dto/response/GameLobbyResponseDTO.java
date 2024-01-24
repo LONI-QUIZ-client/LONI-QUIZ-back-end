@@ -20,13 +20,16 @@ public class GameLobbyResponseDTO {
     private int userCount;
     private int maxCount;
     private String userNickname;
+    private String lobbyCode;
 
     public GameLobbyResponseDTO(GameLobby gameLobby){
         this.title = gameLobby.getTitle();
         this.createDate = DateChangeUtil.postDateChang(gameLobby.getCreateDate());
         this.lobbyMaxCount = gameLobby.getLobbyMaxRound();
         this.secret = gameLobby.isSecret();
-        this.userCount = gameLobby.getMaxCount();
+        this.userCount = gameLobby.getUserCount();
+        this.maxCount = gameLobby.getMaxCount();
+        this.lobbyCode = gameLobby.getLobby_code();
         this.userNickname = gameLobby.getUser().getNickname();
     }
 }

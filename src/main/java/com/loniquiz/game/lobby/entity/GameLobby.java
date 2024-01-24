@@ -43,8 +43,9 @@ public class GameLobby {
     @Column(name = "lobby_code")
     private String lobby_code; // 비번방시 필요한 code값
 
-    @Column(name = "lobby_user_count", nullable = false)
-    private int userCount; // 로비에 들어온 회원 수
+    @Column(name = "lobby_user_count")
+    @Builder.Default
+    private int userCount = 1; // 로비에 들어온 회원 수
 
     @Column(name = "lobby_max_count", nullable = false)
     private int maxCount; // 로비 최대 인원 설정
