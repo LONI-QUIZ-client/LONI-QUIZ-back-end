@@ -33,7 +33,6 @@ public class GameLobbyService {
     private final GameLobbyRepository gameLobbyRepository;
     private final UserRepository userRepository;
     private final GameMembersRepository gameRoomRepository;
-    private final LobbyChatRepository lobbyChatRepository;
 
 
     // 페이징 처리한 게임 방 보여주기
@@ -97,67 +96,5 @@ public class GameLobbyService {
         }
     }
 
-    /**
-     * 방 들어가기 로직인데 쫌 빡세다 ..
-     * 한 회원이 들어가면 user_count가 올르고 다시 나가면 user_count가 줄어들어야 한다.
-     */
-    public GameDetailDTO isUserCheck(GameRoomRequestDTO dto){
-        GameLobby gameLobby
-                = gameLobbyRepository.findById(dto.getGno()).orElseThrow();
-        User user = userRepository.findById(dto.getUserId()).orElseThrow();
-
-
-
-        // 사용자가 현재 방에 들어갔는지 아닌지 확인을 위한 변수
-        boolean flag =
-                gameRoomRepository.existsByUserAndGameLobby(user, gameLobby);
-
-        if (!flag){ // 존재하지 않다면
-
-            // 게임 들어 올시 tb_game_room 디비에 저장
-            GameMembers gameRoom = GameMembers.builder()
-                    .gameLobby(gameLobby)
-                    .user(user)
-                    .build();
-
-            gameRoomRepository.save(gameRoom);
-            gameLobbyRepository.upUserCount(dto.getGno()); // 카운트 증가
-
-            return detail(dto.getGno());
-        }else{
-            gameRoomRepository.deleteByUserAndGameLobby(user, gameLobby);
-
-            gameLobbyRepository.downUserCount(dto.getGno()); // 카운트 하락띠
-
-            return detail(dto.getGno());
-        }
-    }
-
-    // 값 전달을 위한 처리
-    public GameDetailDTO detail(String gno){
-        GameLobby gameLobby = gameLobbyRepository.findById(gno).orElseThrow();
-
-
-        List<GameMembers> byGameLobby = gameRoomRepository.findByGameLobby(gameLobby);
-
-
-        List<GameRoomUserResponseDTO> collect = byGameLobby.stream()
-                .map(gameRoom -> new GameRoomUserResponseDTO(gameRoom))
-                .collect(Collectors.toList());
-
-
-        GameLobbyDetailDTO dto = GameLobbyDetailDTO.builder()
-                .lobbyId(gameLobby.getId())
-                .title(gameLobby.getTitle())
-                .maxRound(gameLobby.getLobbyMaxRound())
-                .createDate(DateChangeUtil.postDateChang(gameLobby.getCreateDate()))
-                .build();
-
-
-        return GameDetailDTO.builder()
-                .users(collect)
-                .gameLobby(dto)
-                .build();
-    }
 
 }
