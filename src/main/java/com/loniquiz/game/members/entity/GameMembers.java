@@ -4,6 +4,8 @@ import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.users.entity.User;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -26,10 +28,12 @@ public class GameMembers {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @OneToOne
     @JoinColumn(name = "lobby_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private GameLobby gameLobby;
 
     @Column(name = "room_score")

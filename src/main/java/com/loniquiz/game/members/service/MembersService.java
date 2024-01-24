@@ -1,6 +1,5 @@
 package com.loniquiz.game.members.service;
 
-
 import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.GameDetailDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyDetailDTO;
@@ -115,6 +114,4 @@ public class MembersService {
 
         return detail(member.getGameLobby().getId());
     }
-
-
 }

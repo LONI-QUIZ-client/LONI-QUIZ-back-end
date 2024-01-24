@@ -10,6 +10,7 @@ import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
 
+import com.loniquiz.game.members.repository.GameMembersRepository;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 public class GameLobbyService {
     private final GameLobbyRepository gameLobbyRepository;
     private final UserRepository userRepository;
+    private final GameMembersRepository gameMembersRepository;
 
 
 
@@ -70,12 +72,18 @@ public class GameLobbyService {
     public GameLobbyListResponseDTO createGameLobby(GameLobbyCreateDTO dto,
                                                     PageRequestDTO pageRequest){
 
-        if (dto == null){
+        if (dto == null){ // 값 전달이 잘 안 될을때
             log.warn("방 생성 중 값이 null이다 dto : {}", dto);
             throw new RuntimeException();
         }
 
         User user = userRepository.findById(dto.getUserId()).orElseThrow();
+
+        boolean flag = gameLobbyRepository.existsByUser(user);// 유저는 방 한번만 만들 수 있게 설정
+
+        if (flag){ // 방을 만든 사람이 방을 또 만들라고 하면 여기에 걸림
+            throw new RuntimeException("방을 이미 한번 만드셨어요");
+        }
 
         gameLobbyRepository.save(dto.toEntity(user));
 

@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface GameMembersRepository extends JpaRepository<GameMembers, String> {
 
-
     //회원과 게임 로비가 존재 하는지 여부 확인
     boolean existsByUserAndGameLobby(User user, GameLobby gameLobby);
 
