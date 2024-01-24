@@ -111,4 +111,15 @@ public class UserController {
                     );
         }
     }
+
+    // 아이디 중복 체크 중복 체크
+    @GetMapping("/check")
+    public ResponseEntity<?> checkUser(String type, String keyword){
+        boolean flag = userService.isDuplicateId(type, keyword);
+
+        return ResponseEntity.ok()
+                .body(
+                        flag
+                );
+    }
 }
