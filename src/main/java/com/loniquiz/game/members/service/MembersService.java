@@ -39,8 +39,6 @@ public class MembersService {
                 = gameLobbyRepository.findById(dto.getGno()).orElseThrow();
         User user = userRepository.findById(dto.getUserId()).orElseThrow();
 
-
-
         // 사용자가 현재 방에 들어갔는지 아닌지 확인을 위한 변수
         boolean flag =
                 gameMembersRepository.existsByUserAndGameLobby(user, gameLobby);
@@ -55,9 +53,12 @@ public class MembersService {
 
             List<GameMembers> byGameLobby = gameMembersRepository.findByGameLobby(gameLobby);
 
+            //방에 들어오는 인원 제한을 위한 처리
             if (byGameLobby.size() >= gameLobby.getMaxCount()){
                 throw new RuntimeException("방이 다 찾습니다");
             }
+
+
 
             gameMembersRepository.save(gameRoom);
             gameLobbyRepository.upUserCount(dto.getGno()); // 카운트 증가
@@ -98,4 +99,6 @@ public class MembersService {
                 .gameLobby(dto)
                 .build();
     }
+
+
 }

@@ -15,11 +15,13 @@ public class GameRoomUserResponseDTO {
     private String userId;
     private String userNickname;
     private String profile;
+    private int score;
 
     public GameRoomUserResponseDTO(GameMembers gameRoom){
         this.userId = gameRoom.getUser().getId();
         this.userNickname = gameRoom.getUser().getNickname();
         this.profile = gameRoom.getUser().getProfileImage();
+        this.score = gameRoom.getScore();
     }
 }
 

@@ -41,6 +41,8 @@ public class MembersController {
                             e.getMessage()
                     );
         }
-
     }
+
+    // 스코어 상승 처리
+
 }
