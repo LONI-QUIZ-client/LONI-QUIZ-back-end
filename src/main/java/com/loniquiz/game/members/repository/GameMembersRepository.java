@@ -16,6 +16,10 @@ public interface GameMembersRepository extends JpaRepository<GameMembers, String
     //회원이 방을 나가면 실행할 sql문
     void deleteByUserAndGameLobby(User user, GameLobby gameLobby);
 
+
+    // 룸 정보 찾기
     List<GameMembers> findByGameLobby(GameLobby gameLobby);
+
+    GameMembers findByUser(User user);
 
 }

@@ -8,6 +8,7 @@ import com.loniquiz.game.lobby.dto.response.GameLobbyResponseDTO;
 import com.loniquiz.game.lobby.dto.response.GameRoomUserResponseDTO;
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
+import com.loniquiz.game.members.dto.request.UpScoreRequestDTO;
 import com.loniquiz.game.members.entity.GameMembers;
 import com.loniquiz.game.members.repository.GameMembersRepository;
 import com.loniquiz.users.entity.User;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,6 +100,23 @@ public class MembersService {
                 .users(collect)
                 .gameLobby(dto)
                 .build();
+    }
+
+
+    // 게임 맞추면 점수 올라가는 처리
+    public GameDetailDTO upCount(UpScoreRequestDTO dto){
+        User user = userRepository.findById(dto.getId()).orElseThrow();
+
+        GameMembers member = gameMembersRepository.findByUser(user);
+
+        int score = member.getScore();
+
+        member.setScore(score + 1);
+
+        gameMembersRepository.save(member);
+
+        return detail(member.getGameLobby().getId());
+
     }
 
 

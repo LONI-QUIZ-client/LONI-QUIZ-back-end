@@ -3,6 +3,7 @@ package com.loniquiz.game.members.controller;
 
 import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.GameDetailDTO;
+import com.loniquiz.game.members.dto.request.UpScoreRequestDTO;
 import com.loniquiz.game.members.service.MembersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,5 +45,15 @@ public class MembersController {
     }
 
     // 스코어 상승 처리
+    @PatchMapping("/upScore")
+    public ResponseEntity<?> upScore(
+            @RequestBody UpScoreRequestDTO dto
+            ){
 
+        GameDetailDTO gameDetailDTO = membersService.upCount(dto);
+        return ResponseEntity.ok()
+                .body(
+                        gameDetailDTO
+                );
+    }
 }
