@@ -1,4 +1,4 @@
-package com.loniquiz.game.lobby.dto.response;
+package com.loniquiz.comment.lobby.dto.response;
 
 import lombok.*;
 

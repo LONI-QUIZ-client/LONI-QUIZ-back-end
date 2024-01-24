@@ -2,7 +2,7 @@ package com.loniquiz.users.entity;
 
 <<<<<<< HEAD
 =======
-import com.loniquiz.comment.game.entity.LobbyChat;
+import com.loniquiz.comment.lobby.entity.LobbyChat;
 >>>>>>> origin/main
 import com.loniquiz.game.room.entity.GameRoom;
 import lombok.*;

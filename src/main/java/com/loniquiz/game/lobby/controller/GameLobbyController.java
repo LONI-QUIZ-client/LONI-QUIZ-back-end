@@ -1,22 +1,17 @@
 package com.loniquiz.game.lobby.controller;
 
-import com.loniquiz.game.lobby.dto.request.DeleteLobbyDTO;
-import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
+import com.loniquiz.comment.lobby.dto.request.GameLobbyCreateDTO;
 import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.GameDetailDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.service.GameLobbyService;
-import com.loniquiz.game.room.entity.GameRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.rmi.server.ExportException;
-import java.util.List;
 
 @RestController
 @Slf4j

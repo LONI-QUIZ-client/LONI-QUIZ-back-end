@@ -1,4 +1,4 @@
-package com.loniquiz.comment.game.entity;
+package com.loniquiz.comment.lobby.entity;
 
 import com.loniquiz.users.entity.User;
 import lombok.*;

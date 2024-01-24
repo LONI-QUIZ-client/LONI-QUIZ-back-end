@@ -1,6 +1,7 @@
 package com.loniquiz.game.lobby.repository;
 
-import com.loniquiz.comment.game.entity.LobbyChat;
+import com.loniquiz.comment.lobby.entity.LobbyChat;
+import com.loniquiz.comment.lobby.repository.LobbyChatRepository;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;

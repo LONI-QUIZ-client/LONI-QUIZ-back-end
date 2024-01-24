@@ -1,17 +1,15 @@
 package com.loniquiz.game.lobby.service;
 
-import com.loniquiz.game.lobby.dto.request.DeleteLobbyDTO;
-import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
+import com.loniquiz.comment.lobby.dto.request.GameLobbyCreateDTO;
 import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.*;
-import com.loniquiz.game.lobby.dto.request.LobbyChatCreateRequestDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyResponseDTO;
 
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
-import com.loniquiz.game.lobby.repository.LobbyChatRepository;
+import com.loniquiz.comment.lobby.repository.LobbyChatRepository;
 import com.loniquiz.game.room.entity.GameRoom;
 import com.loniquiz.game.room.repository.GameRoomRepository;
 import com.loniquiz.users.entity.User;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
