@@ -19,9 +19,9 @@ public class LobbyChatCreateRequestDTO {
     private String content;
 
     @NotBlank
-    private User user;
+    private String userId;
 
-    public LobbyChat toEntity() {
+    public LobbyChat toEntity(User user) {
         return LobbyChat.builder()
                 .content(content)
                 .user(user)

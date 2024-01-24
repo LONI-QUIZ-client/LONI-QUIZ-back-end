@@ -1,6 +1,6 @@
 package com.loniquiz.game.lobby.controller;
 
-import com.loniquiz.comment.lobby.dto.request.GameLobbyCreateDTO;
+import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
 import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.GameDetailDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
@@ -24,7 +24,7 @@ public class GameLobbyController {
 
     // 게임 방 전체 조회
     @GetMapping
-    public ResponseEntity<?> gameListView(PageRequestDTO dto){
+    public ResponseEntity<?> gameListView(PageRequestDTO dto) {
         GameLobbyListResponseDTO gameLobbies = gameLobbyService.gameAllList(dto);
 
         return ResponseEntity.ok()
@@ -41,8 +41,8 @@ public class GameLobbyController {
             @RequestBody GameLobbyCreateDTO dto,
             PageRequestDTO pageRequestDTO,
             BindingResult result
-    ){
-        if (result.hasErrors()){
+    ) {
+        if (result.hasErrors()) {
             return ResponseEntity.badRequest()
                     .body(
                             result.getFieldError()
@@ -56,7 +56,7 @@ public class GameLobbyController {
                     .body(
                             gameLobby
                     );
-        }catch(Exception e){
+        } catch (Exception e) {
             log.warn("방 생성중 서버 에러 : {}", e.getMessage());
             return ResponseEntity.internalServerError()
                     .body(
@@ -71,7 +71,7 @@ public class GameLobbyController {
             @PathVariable String gno,
             @PathVariable String userId,
             PageRequestDTO pageRequest
-    ){
+    ) {
 
         try {
             GameLobbyListResponseDTO gameList = gameLobbyService.deleteLobby(gno, userId, pageRequest);
@@ -80,7 +80,7 @@ public class GameLobbyController {
                     .body(
                             gameList
                     );
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("내뇌 내놔 아이디랑 게임 아이디");
             return ResponseEntity.internalServerError()
                     .body(e.getMessage());
@@ -92,7 +92,7 @@ public class GameLobbyController {
     @GetMapping("/gameRoom")
     public ResponseEntity<?> gameRoomDetail(
             @RequestBody GameRoomRequestDTO dto
-    ){
+    ) {
         GameDetailDTO userCheck = gameLobbyService.isUserCheck(dto);
 
 

@@ -1,6 +1,6 @@
 package com.loniquiz.game.lobby.service;
 
-import com.loniquiz.comment.lobby.dto.request.GameLobbyCreateDTO;
+import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
 import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
 import com.loniquiz.game.lobby.dto.response.*;
 import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
@@ -9,7 +9,6 @@ import com.loniquiz.game.lobby.dto.response.GameLobbyResponseDTO;
 import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
-import com.loniquiz.comment.lobby.repository.LobbyChatRepository;
 import com.loniquiz.game.room.entity.GameRoom;
 import com.loniquiz.game.room.repository.GameRoomRepository;
 import com.loniquiz.users.entity.User;
@@ -33,7 +32,6 @@ public class GameLobbyService {
     private final GameLobbyRepository gameLobbyRepository;
     private final UserRepository userRepository;
     private final GameRoomRepository gameRoomRepository;
-    private final LobbyChatRepository lobbyChatRepository;
 
 
     // 페이징 처리한 게임 방 보여주기

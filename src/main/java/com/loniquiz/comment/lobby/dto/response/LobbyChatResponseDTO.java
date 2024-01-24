@@ -4,6 +4,8 @@ import com.loniquiz.comment.lobby.entity.LobbyChat;
 import com.loniquiz.users.entity.User;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @ToString
@@ -12,12 +14,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class LobbyChatResponseDTO {
-    private String all_cm_content;
+    private LocalDateTime cmDate;
 
-    private User user;
+    private String allCmContent;
+
+    private String nickName;
 
     public LobbyChatResponseDTO(LobbyChat lobbyChat) {
-        this.all_cm_content = lobbyChat.getContent();
-        this.user = lobbyChat.getUser();
+        this.cmDate = lobbyChat.getCmDate();
+        this.allCmContent = lobbyChat.getContent();
+        this.nickName = lobbyChat.getUser().getNickname();
     }
 }
