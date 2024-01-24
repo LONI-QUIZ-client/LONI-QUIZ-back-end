@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+<<<<<<< Updated upstream
     <data-source source="LOCAL" name="@localhost" uuid="e94f8c59-8549-40f5-b80b-d97fc141f86a">
+=======
+    <data-source source="LOCAL" name="@localhost" uuid="a5b14de3-c019-4eb5-9dc0-f0d82882307e">
+>>>>>>> Stashed changes
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>

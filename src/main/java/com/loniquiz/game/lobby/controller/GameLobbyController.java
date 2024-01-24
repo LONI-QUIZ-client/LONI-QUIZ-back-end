@@ -86,5 +86,6 @@ public class GameLobbyController {
                     .body(e.getMessage());
         }
     }
+}
 
 

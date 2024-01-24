@@ -48,7 +48,7 @@ public class LobbyChatService {
     }
 
     public LobbyChatListResponseDTO getChats() {
-        int pageSize = 3;
+        int pageSize = 20;
         List<LobbyChat> chat = lobbyChatRepository.findByOrderByCmDateDesc(PageRequest.of(0, pageSize));
         List<LobbyChatResponseDTO> collect = chat.stream()
                 .map(LobbyChatResponseDTO::new)

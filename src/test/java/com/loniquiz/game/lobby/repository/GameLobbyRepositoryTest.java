@@ -30,7 +30,7 @@ class GameLobbyRepositoryTest {
     @DisplayName("회원 한명이 방 생성")
     void makeLobbyTest() {
         //given
-        User user = userRepository.findById("jj123").orElseThrow();
+        User user = userRepository.findById("jj3713").orElseThrow();
         for (int i = 0; i < 30; i++) {
             GameLobby gameLobby = GameLobby.builder()
                     .title("여기 게임 존잼입니다.!")

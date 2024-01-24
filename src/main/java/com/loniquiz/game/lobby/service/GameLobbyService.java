@@ -10,14 +10,9 @@ import com.loniquiz.game.lobby.entity.GameLobby;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.repository.GameLobbyRepository;
 
-import com.loniquiz.game.room.entity.GameRoom;
-import com.loniquiz.game.room.repository.GameRoomRepository;
-import com.loniquiz.comment.lobby.repository.LobbyChatRepository;
-import com.loniquiz.game.members.entity.GameMembers;
-import com.loniquiz.game.members.repository.GameMembersRepository;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
-import com.loniquiz.utils.DateChangeUtil;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
