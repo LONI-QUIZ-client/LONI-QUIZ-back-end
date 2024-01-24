@@ -131,13 +131,13 @@ public class GameLobbyService {
             gameRoomRepository.save(gameRoom);
             gameLobbyRepository.upUserCount(dto.getGno()); // 카운트 증가
 
-            return detail(gno);
+            return detail(dto.getGno());
         }else{
             gameRoomRepository.deleteByUserAndGameLobby(user, gameLobby);
 
-            gameLobbyRepository.downUserCount(gno); // 카운트 하락띠
+            gameLobbyRepository.downUserCount(dto.getGno()); // 카운트 하락띠
 
-            return detail(gno);
+            return detail(dto.getGno());
         }
     }
     // 채팅 입력하기
