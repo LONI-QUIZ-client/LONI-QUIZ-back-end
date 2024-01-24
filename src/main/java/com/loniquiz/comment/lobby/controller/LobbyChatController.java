@@ -54,8 +54,10 @@ public class LobbyChatController {
         return ResponseEntity.ok().body(chats);
     }
 
-    @GetMapping("/imageCreate")
-    public ResponseEntity<?> imageCreate(@Validated @RequestBody CreateImageRequestDTO dto) {
+    @PostMapping("/imageCreate")
+    public ResponseEntity<?> imageCreate(@Validated
+                                             @RequestBody CreateImageRequestDTO dto
+    ) {
         CreatedImageResponseDTO image = lobbyChatService.createImage(dto);
         return ResponseEntity.ok().body(image);
     }
