@@ -88,10 +88,8 @@ public class GameLobbyService {
         }
 
 
-        String uuid = null;
-        if (dto.isSecret()){ // 비번 방인 경우 비번 생성
-            uuid = String.valueOf(UUID.randomUUID());
-        }
+        // 비번 방 값 처리
+        String uuid = secretUUid(dto.isSecret());
 
         GameLobby save = gameLobbyRepository.save(dto.toEntity(user, uuid));
 
@@ -111,6 +109,16 @@ public class GameLobbyService {
                 .build();
 
         gameMembersRepository.save(gameMember);
+    }
+    
+    // 비밀 방일 경우 랜덤 키값 반환
+    public String secretUUid(boolean secret){
+        String uuid = null;
+        if (secret){
+            uuid = String.valueOf(UUID.randomUUID());
+        }
+        
+        return uuid;
     }
 
 
