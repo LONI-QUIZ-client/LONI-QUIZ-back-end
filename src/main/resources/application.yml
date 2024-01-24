@@ -22,3 +22,6 @@ logging:
   level:
     root: info
     org.hibernate.SQL: debug
+
+root:
+  path: /Users/bumjun2/Desktop/LONI/Test

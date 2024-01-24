@@ -27,9 +27,9 @@ public class UserService {
     }
 
     // 회원가입 처리
-    public boolean newUser(UserNewRequestDTO dto) {
+    public boolean newUser(UserNewRequestDTO dto, String savePath) {
         if (dto != null){ // 회원가입할때 값이 null이 아닐 때만 저장
-            userRepository.save(dto.isEntity(encoder));
+            userRepository.save(dto.isEntity(encoder, savePath));
             return true;
         }else { // 회원가입 할때 값을 좆 같이 주면 노 저장
             return false;

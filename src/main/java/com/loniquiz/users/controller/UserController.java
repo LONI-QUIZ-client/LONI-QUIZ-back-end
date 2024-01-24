@@ -5,12 +5,16 @@ import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
 import com.loniquiz.users.service.UserService;
+import com.loniquiz.utils.upload.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
 
 @RestController
 @Slf4j
@@ -19,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:3000"}, allowCredentials = "true")
 public class UserController {
     private final UserService userService;
+
+    @Value("${root.path}")
+    private String rootPath;
 
 
     // 회원 단일 조회를 위한 컨트롤러
@@ -54,7 +61,13 @@ public class UserController {
                     );
         }
 
-        boolean newUser = userService.newUser(dto);
+        File file = new File(rootPath);
+
+        if (!file.exists()) file.mkdirs();
+
+        String savePath = FileUtil.uploadFile(dto.getProfile(), rootPath);
+
+        boolean newUser = userService.newUser(dto, savePath);
 
         log.info("회원가입을 위한 post매핑 접속 dto : {}", dto);
 
