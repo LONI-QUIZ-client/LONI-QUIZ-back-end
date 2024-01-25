@@ -11,13 +11,10 @@ import java.util.UUID;
 public class FileUtil {
 
     public static String uploadFile(MultipartFile file, String rootPath){
-        // 원본 파일명을 중복이 없는 랜덤 이름으로 변경
         String newFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-        // 이 파일을 날짜별로 관리하기 위해 날짜별 폴더를 생성
         String newUploadPath = makeDateFormatDirectory(rootPath);
 
-        // 파일의 풀 경로를 생성
         String fullPath = newUploadPath + "/" + newFileName;
 
         // 파일 업로드 수행

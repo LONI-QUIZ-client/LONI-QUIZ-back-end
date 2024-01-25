@@ -24,4 +24,4 @@ logging:
     org.hibernate.SQL: debug
 
 root:
-  path: /Users/bumjun2/Desktop/LONI/Test
+  path: /Users/bum_jun2/Desktop/LONI/Test

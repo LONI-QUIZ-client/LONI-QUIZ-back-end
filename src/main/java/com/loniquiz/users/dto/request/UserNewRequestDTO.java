@@ -1,5 +1,6 @@
 package com.loniquiz.users.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.loniquiz.users.entity.User;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ public class UserNewRequestDTO {
     private String pw;
     @Size(min = 2, max = 25) // 닉네임은 최소 2글자 ~ 최대 25글자
     private String nickname;
+
     private MultipartFile profile;
 
     public User isEntity(PasswordEncoder encoder, String savePath){
