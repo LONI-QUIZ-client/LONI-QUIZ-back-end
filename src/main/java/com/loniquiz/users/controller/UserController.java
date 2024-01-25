@@ -51,7 +51,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> newUserCreate(
             @Validated
-            @RequestBody UserNewRequestDTO dto
+            UserNewRequestDTO dto
             , BindingResult result
     ){
         // 입력 값 검증에 걸리면 안 됌 ㅠㅠㅠㅠ
@@ -61,6 +61,7 @@ public class UserController {
                             result.getFieldError()
                     );
         }
+
 
 
         File file = new File(rootPath);
