@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,7 @@ public class LobbyChatService {
     public LobbyChatListResponseDTO getChats() {
         int pageSize = 20;
         List<LobbyChat> chat = lobbyChatRepository.findByOrderByCmDateDesc(PageRequest.of(0, pageSize));
+        Collections.reverse(chat);
         List<LobbyChatResponseDTO> collect = chat.stream()
                 .map(LobbyChatResponseDTO::new)
                 .collect(Collectors.toList());
