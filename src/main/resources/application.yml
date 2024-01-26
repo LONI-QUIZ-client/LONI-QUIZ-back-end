@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/aiimage
+    url: jdbc:mariadb://localhost:3307/aiimage
     username: root
     password: mariadb
   jpa:
@@ -23,5 +23,10 @@ logging:
     root: info
     org.hibernate.SQL: debug
 
+jwt:
+  secret: dJTUjZEI7FTAhIo7q9SQ2nvjaCNnuw+agmjud8tDtA6KMDqjUJY2dyQQnz/yjAA2aSZQWhELKtXjr4oiq1dKhQ==
+
 root:
   path: /Users/bum_jun2/Desktop/LONI/Test
+
+

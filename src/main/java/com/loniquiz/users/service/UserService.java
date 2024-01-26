@@ -1,5 +1,6 @@
 package com.loniquiz.users.service;
 
+import com.loniquiz.auth.TokenProvider;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final TokenProvider tokenProvider;
 
     // 회원 단일 정보 조회
     public UserDetailResponseDTO detail(String id){
@@ -49,8 +51,8 @@ public class UserService {
         if (!encoder.matches(userPw, encodingPw)){
             throw new RuntimeException("비밀번호가 일치하지 않습니다");
         }
-
-        return new UserResponseDTO(user);
+        String token = tokenProvider.createToken(user);
+        return new UserResponseDTO(user, token);
     }
 
 

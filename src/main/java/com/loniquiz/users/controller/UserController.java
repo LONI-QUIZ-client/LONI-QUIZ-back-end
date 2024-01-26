@@ -31,16 +31,16 @@ public class UserController {
 
     // 회원 단일 조회를 위한 컨트롤러
     @GetMapping("/{id}")
-    public ResponseEntity<?> detailUser(@PathVariable String id){
+    public ResponseEntity<?> detailUser(@PathVariable String id) {
 
         log.info("user id : {}", id);
-        try{
+        try {
             UserDetailResponseDTO user = userService.detail(id);
             return ResponseEntity.ok()
                     .body(
                             user
                     );
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body(e.getMessage());
         }
@@ -53,15 +53,14 @@ public class UserController {
             @Validated
             UserNewRequestDTO dto
             , BindingResult result
-    ){
+    ) {
         // 입력 값 검증에 걸리면 안 됌 ㅠㅠㅠㅠ
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             return ResponseEntity.badRequest()
                     .body(
                             result.getFieldError()
                     );
         }
-
 
 
         File file = new File(rootPath);
@@ -74,12 +73,12 @@ public class UserController {
 
         log.info("회원가입을 위한 post매핑 접속 dto : {}", dto);
 
-        if (!newUser){ // 회원가입 실패시
+        if (!newUser) { // 회원가입 실패시
             return ResponseEntity.badRequest()
                     .body(
                             "값 똑바로 줘야돼 이거 뜨면 정범준한테 말해"
                     );
-        }else{ // 회원가입 성공시
+        } else { // 회원가입 성공시
             return ResponseEntity.ok()
                     .body(
                             "나이스 회원가입 성공띠"
@@ -92,16 +91,12 @@ public class UserController {
     // 로그인 처리 컨트롤러
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(
-             @RequestBody UserLoginRequestDTO dto //dkdkdk
-    ){
-        try{
+            @RequestBody UserLoginRequestDTO dto //dkdkdk
+    ) {
+        try {
             UserResponseDTO loginStatus = userService.login(dto);
-
-            return ResponseEntity.ok()
-                    .body(
-                            loginStatus
-                    );
-        }catch (Exception e){
+            return ResponseEntity.ok().body(loginStatus);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -110,17 +105,15 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(
             @PathVariable String id
-    ){
+    ) {
         boolean flag = userService.delete(id);
 
-        if (flag){ // 삭제 정상 처리
+        if (flag) { // 삭제 정상 처리
             return ResponseEntity.ok()
                     .body(
                             "삭제 완료띠"
                     );
-        }
-
-        else{ // 삭제 실패
+        } else { // 삭제 실패
             return ResponseEntity.badRequest()
                     .body(
                             "아이디 값을 한번 확인해 보자"
@@ -130,7 +123,7 @@ public class UserController {
 
     // 아이디 중복 체크 중복 체크
     @GetMapping("/check")
-    public ResponseEntity<?> checkUser(String type, String keyword){
+    public ResponseEntity<?> checkUser(String type, String keyword) {
         boolean flag = userService.isDuplicateId(type, keyword);
 
         return ResponseEntity.ok()

@@ -15,9 +15,11 @@ public class UserResponseDTO {
     private String id;
     private String userNickname;
 
+    private String token;
 
-    public UserResponseDTO(User user){
+    public UserResponseDTO(User user, String token){
         this.id = user.getId();
         this.userNickname = user.getNickname();
+        this.token = token;
     }
 }
