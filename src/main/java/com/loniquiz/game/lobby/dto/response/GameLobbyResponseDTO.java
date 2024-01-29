@@ -13,6 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class GameLobbyResponseDTO {
+    private String gno;
     private String title;
     private String createDate;
     private int lobbyMaxCount;
@@ -23,6 +24,7 @@ public class GameLobbyResponseDTO {
     private String lobbyCode;
 
     public GameLobbyResponseDTO(GameLobby gameLobby){
+        this.gno = gameLobby.getId();
         this.title = gameLobby.getTitle();
         this.createDate = DateChangeUtil.postDateChang(gameLobby.getCreateDate());
         this.lobbyMaxCount = gameLobby.getLobbyMaxRound();

@@ -4,8 +4,10 @@ server:
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3307/aiimage
+#    url: jdbc:mariadb://localhost:3307/aiimage
+    url: jdbc:mariadb://localhost:3306/aiimage
     username: root
+#    password: 1234
     password: mariadb
   jpa:
     # SQL??? ?? ? ?? DBMS? ???? ??? ????
@@ -28,3 +30,4 @@ jwt:
 
 root:
   path: /Users/bum_jun2/Desktop/LONI/Test
+#  path: /Users/youngheeso/Desktop/aiimage-prj

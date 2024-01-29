@@ -19,7 +19,7 @@ public class MembersController {
     private final MembersService membersService;
 
     // 값 전달을 위한 처리
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> gameRoomDetail(
             @RequestBody GameRoomRequestDTO dto
     ){

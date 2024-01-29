@@ -10,7 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class GameRoomRequestDTO {
-
     private String gno;
     private String userId;
 }
