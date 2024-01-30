@@ -51,7 +51,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> newUserCreate(
             @Validated
-            UserNewRequestDTO dto
+            @RequestPart("user") UserNewRequestDTO dto,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
             , BindingResult result
     ) {
         // 입력 값 검증에 걸리면 안 됌 ㅠㅠㅠㅠ
@@ -67,7 +68,7 @@ public class UserController {
 
         if (!file.exists()) file.mkdirs();
 
-        String savePath = FileUtil.uploadFile(dto.getProfile(), rootPath);
+        String savePath = FileUtil.uploadFile(profileImage, rootPath);
 
         boolean newUser = userService.newUser(dto, savePath);
 

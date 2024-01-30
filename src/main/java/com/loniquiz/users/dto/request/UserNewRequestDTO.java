@@ -24,8 +24,6 @@ public class UserNewRequestDTO {
     @Size(min = 2, max = 25) // 닉네임은 최소 2글자 ~ 최대 25글자
     private String nickname;
 
-    private MultipartFile profile;
-
     public User isEntity(PasswordEncoder encoder, String savePath){
         return User.builder()
                 .id(this.id)
