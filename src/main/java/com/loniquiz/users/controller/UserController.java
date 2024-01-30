@@ -1,5 +1,7 @@
 package com.loniquiz.users.controller;
 
+import com.loniquiz.auth.TokenProvider;
+import com.loniquiz.auth.TokenUserInfo;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
@@ -9,13 +11,18 @@ import com.loniquiz.utils.upload.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 
 @RestController
 @Slf4j
@@ -69,6 +76,7 @@ public class UserController {
         if (!file.exists()) file.mkdirs();
 
         String savePath = FileUtil.uploadFile(profileImage, rootPath);
+
 
         boolean newUser = userService.newUser(dto, savePath);
 
@@ -131,5 +139,55 @@ public class UserController {
                 .body(
                         flag
                 );
+    }
+
+    @GetMapping("/profile-image")
+    public ResponseEntity<?> loadProfileImage(
+            @AuthenticationPrincipal TokenUserInfo userInfo
+            ){
+        System.out.println("userInfo = " + userInfo);
+        try {
+            String profilePath = userService.getProfileImage(userInfo.getUserId());
+            File profileFile = new File(rootPath + profilePath);
+            if(!profileFile.exists()) return ResponseEntity.notFound().build();
+
+            byte[] fileDate = FileCopyUtils.copyToByteArray(profileFile);
+
+
+            HttpHeaders headers = new HttpHeaders();
+
+            MediaType mediaType = extractFileExtension(profilePath);
+
+            if (mediaType == null){
+                return ResponseEntity.internalServerError()
+                        .body("발견된 파일은 이미지가 아닙니다.");
+            }
+
+            headers.setContentType(mediaType);
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(fileDate);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+
+    private MediaType extractFileExtension(String filePath){
+        String ext = filePath.substring(filePath.lastIndexOf(".") + 1);
+
+        switch (ext.toUpperCase()){
+            case "JPEG": case "JPG":
+                return MediaType.IMAGE_JPEG;
+            case "PNG":
+                return MediaType.IMAGE_PNG;
+            case "GIF":
+                return MediaType.IMAGE_GIF;
+            default:
+                return null;
+        }
     }
 }

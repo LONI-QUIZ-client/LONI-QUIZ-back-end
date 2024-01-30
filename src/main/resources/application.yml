@@ -26,7 +26,7 @@ logging:
     org.hibernate.SQL: debug
 
 jwt:
-  secret: dJTUjZEI7FTAhIo7q9SQ2nvjaCNnuw+agmjud8tDtA6KMDqjUJY2dyQQnz/yjAA2aSZQWhELKtXjr4oiq1dKhQ==
+  secret: M/uO5Lteyy9MOQ/iwsThpR5yi4/R737xT4gZQlqz0xyZSTq3VAmdrcA1uCSx6JZ6cjwJDsFG+LyeX5a3wt28wQ==
 
 root:
   path: /Users/bum_jun2/Desktop/LONI/Test

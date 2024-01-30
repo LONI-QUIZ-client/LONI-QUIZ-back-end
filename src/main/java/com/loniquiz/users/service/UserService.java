@@ -82,4 +82,13 @@ public class UserService {
 
         return false;
     }
+
+
+    public String getProfileImage(String id){
+        User user = userRepository.findById(id).orElseThrow();
+
+        String profileImage = user.getProfileImage();
+
+        return profileImage;
+    }
 }

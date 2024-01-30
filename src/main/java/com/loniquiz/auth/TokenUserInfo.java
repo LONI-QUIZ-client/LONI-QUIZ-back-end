@@ -10,6 +10,5 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 public class TokenUserInfo {
-
     private String userId;
 }
