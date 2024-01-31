@@ -53,7 +53,7 @@ public class ChatController {
         }
 
         member.add(dto);
-
+        System.out.println("member = " + member);
         return member;
 
 
@@ -62,15 +62,18 @@ public class ChatController {
 
     @MessageMapping("/game/memberList")
     @SendTo("/topic/game/memberList")
-    public List<MemberResponseDTO> gameSendMessage(@Payload String gno){
+    public List<MemberResponseDTO> gameSendMessage(@Payload String gno) throws InterruptedException {
         List<MemberResponseDTO> memberList = new ArrayList<>();
+        Thread.sleep(500);
 
         try {
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(gno);
 
             String gnoValue = (String) jsonObject.get("gno");
 
+            System.out.println("gnoValue = " + gnoValue);
             for (MemberResponseDTO memberResponseDTO : member) {
+                System.out.println("memberResponseDTO = " + memberResponseDTO);
                 if (memberResponseDTO.getGno().equals(gnoValue)){
                     memberList.add(memberResponseDTO);
                 }
