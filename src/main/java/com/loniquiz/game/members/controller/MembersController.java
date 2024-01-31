@@ -28,8 +28,6 @@ public class MembersController {
         try {
             GameDetailDTO userCheck = membersService.isUserCheck(dto);
 
-            log.info("detail : {}", userCheck);
-
             return ResponseEntity.ok()
                     .body(
                             userCheck

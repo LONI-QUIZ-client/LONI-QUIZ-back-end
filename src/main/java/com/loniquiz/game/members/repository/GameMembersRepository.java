@@ -18,7 +18,6 @@ public interface GameMembersRepository extends JpaRepository<GameMembers, String
 
     // 룸 정보 찾기
     List<GameMembers> findByGameLobby(GameLobby gameLobby);
-
     GameMembers findByUser(User user);
 
 }
