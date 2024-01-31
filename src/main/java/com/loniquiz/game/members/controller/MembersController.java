@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -23,13 +25,10 @@ public class MembersController {
     public ResponseEntity<?> gameRoomDetail(
             @RequestBody GameRoomRequestDTO dto
     ){
-
         try {
             GameDetailDTO userCheck = membersService.isUserCheck(dto);
 
-
             log.info("detail : {}", userCheck);
-
 
             return ResponseEntity.ok()
                     .body(
@@ -40,6 +39,26 @@ public class MembersController {
             return ResponseEntity.badRequest()
                     .body(
                             e.getMessage()
+                    );
+        }
+    }
+
+    @GetMapping("/{gno}")
+    public ResponseEntity<?> lobbyList(
+            @PathVariable String gno
+    ){
+        GameDetailDTO detail = membersService.detail(gno);
+
+        if (gno == null){
+            return ResponseEntity.badRequest().body(
+                    "방 정보가 없다"
+            );
+        }
+
+        else {
+            return ResponseEntity.ok()
+                    .body(
+                            detail
                     );
         }
     }
