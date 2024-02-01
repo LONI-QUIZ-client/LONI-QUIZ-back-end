@@ -2,11 +2,9 @@ package com.loniquiz.comment.lobby.controller;
 
 import com.loniquiz.chatEntity.ChatResponse;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
-import com.loniquiz.game.members.dto.response.MemberResponseDTO;
+import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
 import com.loniquiz.game.members.service.MembersService;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -44,18 +42,30 @@ public class ChatController {
 
     @MessageMapping("/game/members")
     @SendTo("/topic/game/members")
-    public List<MemberResponseDTO> gameSendMembers(@Payload MemberResponseDTO dto){
+    public String gameSendMembers(@Payload MemberResponseDTO dto){
+
+        // 같은 gno를 가진 사용자 수를 세기 위한 변수
+        int countSameGnoUsers = 0;
+
+        // 현재 member 리스트를 확인하여 같은 gno를 가진 사용자 수를 계산
         for (MemberResponseDTO memberResponseDTO : member) {
-            if(memberResponseDTO.getUserId().equals(dto.getUserId()) &&
-                    memberResponseDTO.getGno().equals(dto.getGno())){
-                return null;
+            if(memberResponseDTO.getGno().equals(dto.getGno())) {
+                countSameGnoUsers++;
+            }
+            // 이미 아이디와 방 번호가 같은게 있으면 null 반환
+            if(memberResponseDTO.getUserId().equals(dto.getUserId()) && memberResponseDTO.getGno().equals(dto.getGno())){
+                return "false";
             }
         }
 
-        member.add(dto);
-        System.out.println("member = " + member);
-        return member;
+        // 같은 gno를 가진 사용자가 maxUser를 초과하는 경우 null 반환
+        if(countSameGnoUsers >= dto.getMaxUser()) {
+            return "false";
+        }
 
+        // 모든 조건을 통과한 경우에만 member 리스트에 추가
+        member.add(dto);
+        return "true";
 
     }
 
@@ -63,26 +73,8 @@ public class ChatController {
     @MessageMapping("/game/memberList")
     @SendTo("/topic/game/memberList")
     public List<MemberResponseDTO> gameSendMessage(@Payload String gno) throws InterruptedException {
-        List<MemberResponseDTO> memberList = new ArrayList<>();
-        Thread.sleep(500);
-
-        try {
-            JSONObject jsonObject = (JSONObject) new JSONParser().parse(gno);
-
-            String gnoValue = (String) jsonObject.get("gno");
-
-            System.out.println("gnoValue = " + gnoValue);
-            for (MemberResponseDTO memberResponseDTO : member) {
-                System.out.println("memberResponseDTO = " + memberResponseDTO);
-                if (memberResponseDTO.getGno().equals(gnoValue)){
-                    memberList.add(memberResponseDTO);
-                }
-            }
-            System.out.println("memberList = " + memberList);
-            return memberList;
-        } catch (org.json.simple.parser.ParseException e) {
-            throw new RuntimeException(e);
-        }
+        Thread.sleep(200);
+        return member;
 
     }
 }

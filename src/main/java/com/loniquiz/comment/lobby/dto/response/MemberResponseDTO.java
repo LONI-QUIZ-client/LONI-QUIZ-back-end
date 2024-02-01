@@ -1,4 +1,4 @@
-package com.loniquiz.game.members.dto.response;
+package com.loniquiz.comment.lobby.dto.response;
 
 import lombok.*;
 
@@ -12,4 +12,6 @@ import lombok.*;
 public class MemberResponseDTO {
     private String userId;
     private String gno;
+    private String username;
+    private int maxUser;
 }
