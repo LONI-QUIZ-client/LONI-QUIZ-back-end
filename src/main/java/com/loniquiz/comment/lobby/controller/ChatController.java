@@ -22,9 +22,7 @@ public class ChatController {
 
     private final MembersService membersService;
     List<MemberResponseDTO> member = new ArrayList<>();
-
-
-
+    List<MemberResponseDTO> superMember = new ArrayList<>();
 
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
@@ -64,6 +62,12 @@ public class ChatController {
         if(countSameGnoUsers >= dto.getMaxUser()) {
             roomIsFullDTO.setIsFull("true");
             return roomIsFullDTO;
+        }
+
+        boolean existsInSuperMember = superMember.stream().anyMatch(memberDTO -> memberDTO.getGno().equals(dto.getGno()));
+        if (!existsInSuperMember) {
+            superMember.add(dto);
+            System.out.println("superMember = " + superMember);
         }
 
         // 모든 조건을 통과한 경우에만 member 리스트에 추가
