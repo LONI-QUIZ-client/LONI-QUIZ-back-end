@@ -3,6 +3,8 @@ package com.loniquiz.comment.lobby.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loniquiz.chatEntity.ChatResponse;
+import com.loniquiz.comment.lobby.dto.request.ImageRequestDTO;
+import com.loniquiz.comment.lobby.dto.request.TimerRequestDTO;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
 import com.loniquiz.comment.lobby.entity.GameMemberList;
@@ -110,6 +112,7 @@ public class ChatController {
             }
         }, 0, 1, TimeUnit.SECONDS); // 1초 간격
     }
+<<<<<<< HEAD
     @MessageMapping("/game/start")
     @SendTo("/topic/game/start")
     public List<GameMemberList> gameStart(@Payload String gno) {
@@ -206,4 +209,14 @@ public class ChatController {
             e.printStackTrace();
         }
     }
+=======
+
+    @MessageMapping("/game/image")
+    @SendTo("/topic/game/image")
+    public String imageSelect(@Payload ImageRequestDTO image){
+        System.out.println("image = " + image.getImage());
+        return image.getImage();
+    }
+
+>>>>>>> bumjun22
 }
