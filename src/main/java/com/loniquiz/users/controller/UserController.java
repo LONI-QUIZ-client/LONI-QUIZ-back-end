@@ -37,7 +37,7 @@ public class UserController {
 
 
     // 회원 단일 조회를 위한 컨트롤러
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public ResponseEntity<?> detailUser(@PathVariable String id) {
 
         log.info("user id : {}", id);
