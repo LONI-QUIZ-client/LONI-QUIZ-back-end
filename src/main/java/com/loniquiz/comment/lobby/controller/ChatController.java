@@ -3,26 +3,38 @@ package com.loniquiz.comment.lobby.controller;
 import com.loniquiz.chatEntity.ChatResponse;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
+
+import com.loniquiz.game.members.dto.response.GameRoomResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.RoomIsFullDTO;
+
 import com.loniquiz.game.members.service.MembersService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @Controller
-@RequiredArgsConstructor
 public class ChatController {
 
-    private final MembersService membersService;
     List<MemberResponseDTO> member = new ArrayList<>();
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     List<MemberResponseDTO> superMember = new ArrayList<>();
+
 
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
@@ -33,36 +45,34 @@ public class ChatController {
 
     @MessageMapping("/game/chat")
     @SendTo("/topic/game/messages")
-    public GameChatResponseDTO gameSendMessage(@Payload GameChatResponseDTO res){
+    public GameChatResponseDTO gameSendMessage(@Payload GameChatResponseDTO res) {
         res.setLocalDateTime(LocalDateTime.now());
         return res;
     }
 
     @MessageMapping("/game/members")
     @SendTo("/topic/game/members")
-    public RoomIsFullDTO gameSendMembers(@Payload MemberResponseDTO dto){
-        RoomIsFullDTO roomIsFullDTO = new RoomIsFullDTO();
+    public String gameSendMembers(@Payload MemberResponseDTO dto) {
+
 
         // 같은 gno를 가진 사용자 수를 세기 위한 변수
         int countSameGnoUsers = 0;
 
         // 현재 member 리스트를 확인하여 같은 gno를 가진 사용자 수를 계산
         for (MemberResponseDTO memberResponseDTO : member) {
-            if(memberResponseDTO.getGno().equals(dto.getGno())) {
+            if (memberResponseDTO.getGno().equals(dto.getGno())) {
                 countSameGnoUsers++;
             }
             // 이미 아이디와 방 번호가 같은게 있으면 null 반환
-            if(memberResponseDTO.getUserId().equals(dto.getUserId()) && memberResponseDTO.getGno().equals(dto.getGno())){
-                roomIsFullDTO.setIsFull("false");
-                return roomIsFullDTO;
+            if (memberResponseDTO.getUserId().equals(dto.getUserId()) && memberResponseDTO.getGno().equals(dto.getGno())) {
+                return "false";
             }
         }
 
         // 같은 gno를 가진 사용자가 maxUser를 초과하는 경우 null 반환
-        if(countSameGnoUsers >= dto.getMaxUser()) {
-            roomIsFullDTO.setIsFull("true");
-            return roomIsFullDTO;
-        }
+        if (countSameGnoUsers >= dto.getMaxUser()) {
+            return "false";
+
 
         boolean existsInSuperMember = superMember.stream().anyMatch(memberDTO -> memberDTO.getGno().equals(dto.getGno()));
         if (!existsInSuperMember) {
@@ -83,6 +93,23 @@ public class ChatController {
     public List<MemberResponseDTO> gameSendMessage(@Payload String gno) throws InterruptedException {
         Thread.sleep(200);
         return member;
+    }
 
+    @MessageMapping("/game/timer")
+    @SendTo("/topic/game/timer")
+    public void sendTimer() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        AtomicInteger countdown = new AtomicInteger(10); // 초기 카운트다운 값
+
+        scheduler.scheduleAtFixedRate(() -> {
+            int currentCountdown = countdown.getAndDecrement();
+            if (currentCountdown > 0) {
+                System.out.println("남은 시간: " + currentCountdown + "초");
+                messagingTemplate.convertAndSend("/topic/game/timer", currentCountdown);
+            } else {
+                System.out.println("카운트다운 종료!");
+                scheduler.shutdown(); // 카운트다운이 끝나면 스케줄러 종료
+            }
+        }, 0, 1, TimeUnit.SECONDS); // 1초 간격
     }
 }
