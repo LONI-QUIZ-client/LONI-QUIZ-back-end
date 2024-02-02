@@ -38,11 +38,11 @@ public class UserController {
 
     // 회원 단일 조회를 위한 컨트롤러
     @GetMapping("/{userId}")
-    public ResponseEntity<?> detailUser(@PathVariable String id) {
+    public ResponseEntity<?> detailUser(@PathVariable String userId) {
 
-        log.info("user id : {}", id);
+        log.info("user id : {}", userId);
         try {
-            UserDetailResponseDTO user = userService.detail(id);
+            UserDetailResponseDTO user = userService.detail(userId);
             return ResponseEntity.ok()
                     .body(
                             user
