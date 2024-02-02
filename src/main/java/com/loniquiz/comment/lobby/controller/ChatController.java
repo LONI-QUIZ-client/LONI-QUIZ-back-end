@@ -3,7 +3,10 @@ package com.loniquiz.comment.lobby.controller;
 import com.loniquiz.chatEntity.ChatResponse;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
+
 import com.loniquiz.game.members.dto.response.GameRoomResponseDTO;
+import com.loniquiz.comment.lobby.dto.response.RoomIsFullDTO;
+
 import com.loniquiz.game.members.service.MembersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,7 @@ public class ChatController {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+    List<MemberResponseDTO> superMember = new ArrayList<>();
 
 
     @MessageMapping("/chat")
@@ -43,13 +47,13 @@ public class ChatController {
     @SendTo("/topic/game/messages")
     public GameChatResponseDTO gameSendMessage(@Payload GameChatResponseDTO res) {
         res.setLocalDateTime(LocalDateTime.now());
-        System.out.println("res = " + res);
         return res;
     }
 
     @MessageMapping("/game/members")
     @SendTo("/topic/game/members")
     public String gameSendMembers(@Payload MemberResponseDTO dto) {
+
 
         // 같은 gno를 가진 사용자 수를 세기 위한 변수
         int countSameGnoUsers = 0;
@@ -68,11 +72,18 @@ public class ChatController {
         // 같은 gno를 가진 사용자가 maxUser를 초과하는 경우 null 반환
         if (countSameGnoUsers >= dto.getMaxUser()) {
             return "false";
+
+
+        boolean existsInSuperMember = superMember.stream().anyMatch(memberDTO -> memberDTO.getGno().equals(dto.getGno()));
+        if (!existsInSuperMember) {
+            superMember.add(dto);
+            System.out.println("superMember = " + superMember);
         }
 
         // 모든 조건을 통과한 경우에만 member 리스트에 추가
         member.add(dto);
-        return "true";
+        roomIsFullDTO.setIsFull("false");
+        return roomIsFullDTO;
 
     }
 
