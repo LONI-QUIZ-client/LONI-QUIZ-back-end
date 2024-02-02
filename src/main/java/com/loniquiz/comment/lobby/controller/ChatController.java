@@ -112,7 +112,12 @@ public class ChatController {
             }
         }, 0, 1, TimeUnit.SECONDS); // 1초 간격
     }
+<<<<<<< Updated upstream
 <<<<<<< HEAD
+=======
+
+
+>>>>>>> Stashed changes
     @MessageMapping("/game/start")
     @SendTo("/topic/game/start")
     public List<GameMemberList> gameStart(@Payload String gno) {
@@ -166,6 +171,7 @@ public class ChatController {
         }
         return null;
     }
+    
     @MessageMapping("/game/next")
     @SendTo("/topic/game/next")
     public void nextTurn(@Payload String gno){
