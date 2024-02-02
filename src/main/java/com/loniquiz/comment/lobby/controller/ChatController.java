@@ -3,12 +3,6 @@ package com.loniquiz.comment.lobby.controller;
 import com.loniquiz.chatEntity.ChatResponse;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
-
-import com.loniquiz.game.members.dto.response.GameRoomResponseDTO;
-import com.loniquiz.comment.lobby.dto.response.RoomIsFullDTO;
-
-import com.loniquiz.game.members.service.MembersService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -72,7 +66,7 @@ public class ChatController {
         // 같은 gno를 가진 사용자가 maxUser를 초과하는 경우 null 반환
         if (countSameGnoUsers >= dto.getMaxUser()) {
             return "false";
-
+        }
 
         boolean existsInSuperMember = superMember.stream().anyMatch(memberDTO -> memberDTO.getGno().equals(dto.getGno()));
         if (!existsInSuperMember) {
@@ -82,8 +76,8 @@ public class ChatController {
 
         // 모든 조건을 통과한 경우에만 member 리스트에 추가
         member.add(dto);
-        roomIsFullDTO.setIsFull("false");
-        return roomIsFullDTO;
+        return "false";
+
 
     }
 
