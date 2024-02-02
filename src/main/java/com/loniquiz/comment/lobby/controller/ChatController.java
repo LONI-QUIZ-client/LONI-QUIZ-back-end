@@ -1,6 +1,8 @@
 package com.loniquiz.comment.lobby.controller;
 
 import com.loniquiz.chatEntity.ChatResponse;
+import com.loniquiz.comment.lobby.dto.request.ImageRequestDTO;
+import com.loniquiz.comment.lobby.dto.request.TimerRequestDTO;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,4 +108,12 @@ public class ChatController {
             }
         }, 0, 1, TimeUnit.SECONDS); // 1초 간격
     }
+
+    @MessageMapping("/game/image")
+    @SendTo("/topic/game/image")
+    public String imageSelect(@Payload ImageRequestDTO image){
+        System.out.println("image = " + image.getImage());
+        return image.getImage();
+    }
+
 }
