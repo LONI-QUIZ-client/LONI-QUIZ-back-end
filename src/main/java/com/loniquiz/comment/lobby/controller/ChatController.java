@@ -112,12 +112,7 @@ public class ChatController {
             }
         }, 0, 1, TimeUnit.SECONDS); // 1초 간격
     }
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-=======
 
-
->>>>>>> Stashed changes
     @MessageMapping("/game/start")
     @SendTo("/topic/game/start")
     public List<GameMemberList> gameStart(@Payload String gno) {
@@ -215,7 +210,7 @@ public class ChatController {
             e.printStackTrace();
         }
     }
-=======
+
 
     @MessageMapping("/game/image")
     @SendTo("/topic/game/image")
@@ -223,6 +218,4 @@ public class ChatController {
         System.out.println("image = " + image.getImage());
         return image.getImage();
     }
-
->>>>>>> bumjun22
 }

@@ -6,10 +6,12 @@ import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
+import com.loniquiz.users.entity.User;
 import com.loniquiz.users.service.UserService;
 import com.loniquiz.utils.upload.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -189,5 +192,14 @@ public class UserController {
             default:
                 return null;
         }
+    }
+
+    @GetMapping("/order/score")
+    public ResponseEntity<?> orderScore(){
+        List<User> users = userService.orderByScore();
+        return ResponseEntity.ok()
+                .body(
+                        users
+                );
     }
 }

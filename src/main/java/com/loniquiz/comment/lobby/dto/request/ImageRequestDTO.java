@@ -11,5 +11,4 @@ import lombok.*;
 @Builder
 public class ImageRequestDTO {
     private String image;
-    private String gno;
 }

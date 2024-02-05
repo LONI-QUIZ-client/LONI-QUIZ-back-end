@@ -12,7 +12,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     // 닉네임으로 회원 찾기
     User findByNickname(String nickname);
-
     boolean existsById(String id);
     boolean existsByNickname(String nickname);
+
+    List<User> findAllByOrderByScore();
+
 }

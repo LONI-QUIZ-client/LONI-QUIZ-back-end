@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -90,5 +92,10 @@ public class UserService {
         String profileImage = user.getProfileImage();
 
         return profileImage;
+    }
+
+    public List<User> orderByScore(){
+        List<User> allByOrderByScore = userRepository.findAllByOrderByScore();
+        return allByOrderByScore;
     }
 }
