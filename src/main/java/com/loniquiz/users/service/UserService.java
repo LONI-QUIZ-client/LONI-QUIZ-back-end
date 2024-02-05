@@ -5,6 +5,7 @@ import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
+import com.loniquiz.users.dto.response.UserSortResponseDTO;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -94,8 +96,12 @@ public class UserService {
         return profileImage;
     }
 
-    public List<User> orderByScore(){
-        List<User> allByOrderByScore = userRepository.findAllByOrderByScore();
-        return allByOrderByScore;
+    public List<UserSortResponseDTO> orderByScore(){
+        List<User> SortUser = userRepository.findAllByOrderByScore();
+
+        List<UserSortResponseDTO> dtoList = SortUser.stream()
+                .map(user -> new UserSortResponseDTO(user))
+                .collect(Collectors.toList());
+        return dtoList;
     }
 }

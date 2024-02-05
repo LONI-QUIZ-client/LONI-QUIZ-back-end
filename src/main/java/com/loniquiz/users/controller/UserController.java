@@ -6,6 +6,7 @@ import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
+import com.loniquiz.users.dto.response.UserSortResponseDTO;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.service.UserService;
 import com.loniquiz.utils.upload.FileUtil;
@@ -196,7 +197,7 @@ public class UserController {
 
     @GetMapping("/order/score")
     public ResponseEntity<?> orderScore(){
-        List<User> users = userService.orderByScore();
+        List<UserSortResponseDTO> users = userService.orderByScore();
         return ResponseEntity.ok()
                 .body(
                         users
