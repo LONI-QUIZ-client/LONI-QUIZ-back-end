@@ -154,10 +154,11 @@ public class ChatController {
             for (MemberResponseDTO memberDTO : member) {
                 if (memberDTO.getGno().equals(gnoValue)) {
                     Member mem = new Member();
+                    mem.setUserId(memberDTO.getUserId());
                     mem.setName(memberDTO.getUsername());
 
                     // 첫 번째 멤버인 경우 state를 true로 설정하고, 그 외에는 false로 설정
-                    mem.setState(isFirstMember);
+                    mem.setTurn(isFirstMember);
                     isFirstMember = false; // 첫 번째 멤버가 아니므로 false로 설정
 
                     memberList.add(mem);
@@ -198,11 +199,11 @@ public class ChatController {
                         List<Member> members = targetGameMemberList.getMembers();
                         for (int i = 0; i < members.size(); i++) {
                             Member member = members.get(i);
-                            if (member.isState()) { // 현재 멤버의 상태가 true인 경우
-                                member.setState(false); // 상태를 false로 변경
+                            if (member.isTurn()) { // 현재 멤버의 상태가 true인 경우
+                                member.setTurn(false); // 상태를 false로 변경
                                 int nextIndex = (i + 1) % members.size(); // 다음 멤버의 인덱스 계산
                                 Member nextMember = members.get(nextIndex);
-                                nextMember.setState(true); // 다음 멤버의 상태를 true로 변경
+                                nextMember.setTurn(true); // 다음 멤버의 상태를 true로 변경
                                 break;
                             }
                         }

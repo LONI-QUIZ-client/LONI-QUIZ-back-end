@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Member {
+    private String userId;
     private String name;
-    private boolean state;
+    private boolean turn;
 }
