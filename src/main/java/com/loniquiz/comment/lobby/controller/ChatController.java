@@ -95,6 +95,14 @@ public class ChatController {
         return member;
     }
 
+    @MessageMapping("/game/getSuperUser")
+    @SendTo("/topic/game/getSuperUser")
+    public List<MemberResponseDTO> getSuperUser(@Payload String gno) throws InterruptedException {
+        Thread.sleep(200);
+        System.out.println("superMember = " + superMember);
+        return superMember;
+    }
+
     @MessageMapping("/game/timer")
     @SendTo("/topic/game/timer")
     public void sendTimer() {
