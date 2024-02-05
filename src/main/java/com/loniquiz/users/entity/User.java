@@ -1,5 +1,6 @@
 package com.loniquiz.users.entity;
 import com.loniquiz.comment.lobby.entity.LobbyChat;
+import com.loniquiz.follwer.entity.Follower;
 import com.loniquiz.game.members.entity.GameMembers;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Setter @Getter
-@ToString(exclude = {"gameRooms", "lobbyChats"})
+@ToString(exclude = {"gameRooms", "lobbyChats", "followers"})
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,4 +52,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<LobbyChat> lobbyChats = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Follower> followers = new ArrayList<>();
 }
