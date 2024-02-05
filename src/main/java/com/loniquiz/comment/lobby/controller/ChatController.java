@@ -223,8 +223,8 @@ public class ChatController {
 
     @MessageMapping("/game/image")
     @SendTo("/topic/game/image")
-    public String imageSelect(@Payload ImageRequestDTO image){
+    public ImageRequestDTO imageSelect(@Payload ImageRequestDTO image){
         System.out.println("image = " + image.getImage());
-        return image.getImage();
+        return image;
     }
 }
