@@ -74,15 +74,22 @@ public class UserController {
                     );
         }
 
+        String uploadProfileImagePath = null;
 
         File file = new File(rootPath);
-
         if (!file.exists()) file.mkdirs();
 
+        if(profileImage!=null){
+            uploadProfileImagePath = FileUtil.uploadFile(profileImage, rootPath);
+        }
+
+        boolean newUser = userService.newUser(dto, uploadProfileImagePath);
+
+
+        /*File file = new File(rootPath);
+        if (!file.exists()) file.mkdirs();
         String savePath = FileUtil.uploadFile(profileImage, rootPath);
-
-
-        boolean newUser = userService.newUser(dto, savePath);
+        boolean newUser = userService.newUser(dto, savePath);*/
 
         log.info("회원가입을 위한 post매핑 접속 dto : {}", dto);
 
