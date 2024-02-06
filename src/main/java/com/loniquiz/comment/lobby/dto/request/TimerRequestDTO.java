@@ -10,6 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class TimerRequestDTO {
-    private String roomId;
+    private String gno;
     private int time;
 }

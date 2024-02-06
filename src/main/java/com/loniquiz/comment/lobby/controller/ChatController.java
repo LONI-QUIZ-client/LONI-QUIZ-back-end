@@ -97,7 +97,8 @@ public class ChatController {
 
     @MessageMapping("/game/timer")
     @SendTo("/topic/game/timer")
-    public void sendTimer() {
+    public String sendTimer(@Payload TimerRequestDTO dto) {
+
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         AtomicInteger countdown = new AtomicInteger(10); // 초기 카운트다운 값
 
@@ -105,12 +106,14 @@ public class ChatController {
             int currentCountdown = countdown.getAndDecrement();
             if (currentCountdown > 0) {
                 System.out.println("남은 시간: " + currentCountdown + "초");
-                messagingTemplate.convertAndSend("/topic/game/timer", currentCountdown);
+                dto.setTime(currentCountdown);
+                messagingTemplate.convertAndSend("/topic/game/timer", dto);
             } else {
                 System.out.println("카운트다운 종료!");
                 scheduler.shutdown(); // 카운트다운이 끝나면 스케줄러 종료
             }
         }, 0, 1, TimeUnit.SECONDS); // 1초 간격
+        return dto.getGno();
     }
 
     @MessageMapping("/game/start")
