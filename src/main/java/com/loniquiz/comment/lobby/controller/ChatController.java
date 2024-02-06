@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loniquiz.chatEntity.ChatResponse;
 import com.loniquiz.comment.lobby.dto.request.ImageRequestDTO;
-import com.loniquiz.comment.lobby.dto.request.TimerRequestDTO;
 import com.loniquiz.comment.lobby.dto.response.ForCheckResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.UserPointUpResponseDTO;
 import com.loniquiz.comment.lobby.entity.GameMemberList;
 import com.loniquiz.comment.lobby.entity.Member;
-import com.loniquiz.users.dto.response.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -134,6 +132,23 @@ public class ChatController {
     public List<MemberResponseDTO> gameSendMessage(@Payload String gno) throws InterruptedException {
         Thread.sleep(200);
         return member;
+    }
+
+    @MessageMapping("/game/exitRoom")
+    @SendTo("/topic/game/exitRoom")
+    public List<List<?>> exitRoom(@Payload UserPointUpResponseDTO res) {
+        String gno = res.getGno();
+        String userId = res.getUserId();
+
+        removeMemberFromSuperMemberList(superMember, gno, userId);
+        removeMemberFromGameMemberList(gameMembers, gno, userId);
+        removeMemberFromMemberList(member, gno, userId);
+
+        List<List<?>> result = new ArrayList<>();
+        result.add(superMember);
+        result.add(gameMembers);
+        result.add(member);
+        return result;
     }
 
     @MessageMapping("/game/getSuperUser")
@@ -267,5 +282,40 @@ public class ChatController {
     public ImageRequestDTO imageSelect(@Payload ImageRequestDTO image) {
         System.out.println("image = " + image.getImage());
         return image;
+    }
+
+    private void removeMemberFromSuperMemberList(List<MemberResponseDTO> superMember, String gno, String userId) {
+        Iterator<MemberResponseDTO> iterator = superMember.iterator();
+        while (iterator.hasNext()) {
+            MemberResponseDTO member = iterator.next();
+            if (member.getGno().equals(gno) && member.getUserId().equals(userId)) {
+                iterator.remove();
+            }
+        }
+    }
+
+    private void removeMemberFromGameMemberList(List<GameMemberList> gameMembers, String gno, String userId) {
+        for (GameMemberList gameMemberList : gameMembers) {
+            if (gameMemberList.getGno().equals(gno)) {
+                Iterator<Member> iterator = gameMemberList.getMembers().iterator();
+                while (iterator.hasNext()) {
+                    Member member = iterator.next();
+                    if (member.getUserId().equals(userId)) {
+                        iterator.remove();
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void removeMemberFromMemberList(List<MemberResponseDTO> memberList, String gno, String userId) {
+        Iterator<MemberResponseDTO> iterator = memberList.iterator();
+        while (iterator.hasNext()) {
+            MemberResponseDTO member = iterator.next();
+            if (member.getGno().equals(gno) && member.getUserId().equals(userId)) {
+                iterator.remove();
+            }
+        }
     }
 }
