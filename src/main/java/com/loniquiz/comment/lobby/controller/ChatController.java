@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loniquiz.chatEntity.ChatResponse;
 import com.loniquiz.comment.lobby.dto.request.ImageRequestDTO;
 import com.loniquiz.comment.lobby.dto.request.TimerRequestDTO;
+import com.loniquiz.comment.lobby.dto.response.ForCheckResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
+import com.loniquiz.comment.lobby.dto.response.UserPointUpResponseDTO;
 import com.loniquiz.comment.lobby.entity.GameMemberList;
 import com.loniquiz.comment.lobby.entity.Member;
+import com.loniquiz.users.dto.response.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -47,6 +50,44 @@ public class ChatController {
     @SendTo("/topic/game/messages")
     public GameChatResponseDTO gameSendMessage(@Payload GameChatResponseDTO res) {
         res.setLocalDateTime(LocalDateTime.now());
+        return res;
+    }
+
+    @MessageMapping("/game/userPointUp")
+    @SendTo("/topic/game/userPointUp")
+    public void userPointUp(@Payload UserPointUpResponseDTO res) {
+        System.out.println("여기까지 오기는 하냐아ㅏㅏㅏㅏㅏㅏㅏㅏ");
+        // gameMembers 리스트에서 gno가 일치하는 GameMemberList 찾기
+        Optional<GameMemberList> optionalGameMemberList = gameMembers.stream()
+                .filter(gameMemberList -> gameMemberList.getGno().equals(res.getGno()))
+                .findFirst();
+
+        // gno가 일치하는 GameMemberList가 존재하는 경우
+        if (optionalGameMemberList.isPresent()) {
+            GameMemberList gameMemberList = optionalGameMemberList.get();
+
+            // gameMemberList에서 userId가 일치하는 Member 찾기
+            Optional<Member> optionalMember = gameMemberList.getMembers().stream()
+                    .filter(member -> member.getUserId().equals(res.getUserId()))
+                    .findFirst();
+
+            // userId가 일치하는 Member가 존재하는 경우
+            if (optionalMember.isPresent()) {
+                Member member = optionalMember.get();
+
+                // Member의 포인트를 1 증가시키기
+                member.setPoint(member.getPoint() + 1);
+            }
+        }
+        System.out.println("gameMembers = " + gameMembers);
+    }
+
+    @MessageMapping("/game/answerKey")
+    @SendTo("/topic/game/answerKey")
+    public ForCheckResponseDTO forCheck(@Payload ForCheckResponseDTO res) {
+        if (res != null) {
+            System.out.println("res = " + res);
+        }
         return res;
     }
 
@@ -175,10 +216,10 @@ public class ChatController {
         }
         return null;
     }
-    
+
     @MessageMapping("/game/next")
     @SendTo("/topic/game/next")
-    public void nextTurn(@Payload String gno){
+    public void nextTurn(@Payload String gno) {
         try {
             // ObjectMapper 객체 생성
             ObjectMapper objectMapper = new ObjectMapper();
@@ -223,7 +264,7 @@ public class ChatController {
 
     @MessageMapping("/game/image")
     @SendTo("/topic/game/image")
-    public ImageRequestDTO imageSelect(@Payload ImageRequestDTO image){
+    public ImageRequestDTO imageSelect(@Payload ImageRequestDTO image) {
         System.out.println("image = " + image.getImage());
         return image;
     }

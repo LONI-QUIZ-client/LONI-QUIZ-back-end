@@ -13,4 +13,6 @@ public class Member {
     private String userId;
     private String name;
     private boolean turn;
+    @Builder.Default
+    private int point = 0;
 }
