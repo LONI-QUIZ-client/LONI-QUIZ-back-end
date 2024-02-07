@@ -152,18 +152,54 @@ public class UserController {
                 );
     }
 
-    @GetMapping("/profile-image")
-    public ResponseEntity<?> loadProfileImage(
-            @AuthenticationPrincipal TokenUserInfo userInfo
-            ){
-        System.out.println("userInfo = " + userInfo);
+    @GetMapping("/profile-image/{id}")
+    public ResponseEntity<?> userProfileImage(
+            @PathVariable String id
+    ){
+        log.info("profile-image/id GET");
+
+
         try {
-            String profilePath = userService.getProfileImage(userInfo.getUserId());
+            String profilePath = userService.getProfileImage(id);
+
             File profileFile = new File(rootPath + profilePath);
             if(!profileFile.exists()) return ResponseEntity.notFound().build();
 
             byte[] fileDate = FileCopyUtils.copyToByteArray(profileFile);
 
+            HttpHeaders headers = new HttpHeaders();
+
+            MediaType mediaType = extractFileExtension(profilePath);
+
+            if (mediaType == null){
+                return ResponseEntity.internalServerError()
+                        .body("발견된 파일은 이미지가 아닙니다.");
+            }
+
+            headers.setContentType(mediaType);
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(fileDate);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/profile-image")
+    public ResponseEntity<?> loadProfileImage(
+            @AuthenticationPrincipal TokenUserInfo userInfo
+            ){
+        try {
+            String profilePath = userService.getProfileImage(userInfo.getUserId());
+
+            File profileFile = new File(rootPath + profilePath);
+            if(!profileFile.exists()) return ResponseEntity.notFound().build();
+
+            byte[] fileDate = FileCopyUtils.copyToByteArray(profileFile);
 
             HttpHeaders headers = new HttpHeaders();
 

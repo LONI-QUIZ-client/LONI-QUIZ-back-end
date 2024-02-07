@@ -1,6 +1,5 @@
 package com.loniquiz.follwer.controller;
 
-import com.loniquiz.auth.TokenProvider;
 import com.loniquiz.auth.TokenUserInfo;
 import com.loniquiz.follwer.dto.request.FollwerRequestDTO;
 import com.loniquiz.follwer.dto.response.FollwerListResponseDTO;
