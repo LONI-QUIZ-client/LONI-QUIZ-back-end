@@ -10,6 +10,7 @@ import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
 import com.loniquiz.comment.lobby.entity.GameMemberList;
 import com.loniquiz.comment.lobby.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -95,25 +96,28 @@ public class ChatController {
         return member;
     }
 
-    @MessageMapping("/game/timer")
-    @SendTo("/topic/game/timer")
-    public String sendTimer(@Payload TimerRequestDTO dto) {
 
+    @MessageMapping("/game/timer/{roomId}")
+    @SendTo("/topic/game/timer/{roomId}")
+    public TimerRequestDTO sendTimer(@Payload TimerRequestDTO dto, @DestinationVariable String roomId) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         AtomicInteger countdown = new AtomicInteger(10); // 초기 카운트다운 값
 
         scheduler.scheduleAtFixedRate(() -> {
             int currentCountdown = countdown.getAndDecrement();
             if (currentCountdown > 0) {
-                System.out.println("남은 시간: " + currentCountdown + "초");
+                System.out.println("Room ID: " + roomId + ", Remaining Time: " + currentCountdown + " seconds");
                 dto.setTime(currentCountdown);
-                messagingTemplate.convertAndSend("/topic/game/timer", dto);
+                messagingTemplate.convertAndSend("/topic/game/timer/" + roomId, dto);
             } else {
-                System.out.println("카운트다운 종료!");
+                System.out.println("Room ID: " + roomId + ", Countdown Finished!");
                 scheduler.shutdown(); // 카운트다운이 끝나면 스케줄러 종료
             }
         }, 0, 1, TimeUnit.SECONDS); // 1초 간격
-        return dto.getGno();
+
+        TimerRequestDTO response = new TimerRequestDTO();
+        response.setGno(roomId);
+        return response;
     }
 
     @MessageMapping("/game/start")
