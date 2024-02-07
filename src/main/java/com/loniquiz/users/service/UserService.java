@@ -1,17 +1,28 @@
 package com.loniquiz.users.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.loniquiz.auth.TokenProvider;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
-import com.loniquiz.users.dto.response.UserDetailResponseDTO;
-import com.loniquiz.users.dto.response.UserResponseDTO;
+import com.loniquiz.users.dto.response.*;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -23,6 +34,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final TokenProvider tokenProvider;
+
+    @Value("${kakao.kakaoClientID}")
+    private String KAKAO_CLIENT_ID;
+    @Value("${kakao.kakaoRedirectURI}")
+    private String KAKAO_REDIRECT_URI;
+    @Value("${kakao.kakaoClientSecret}")
+    private String KAKAO_CLIENT_SECRET;
+    @Value("${kakao.kakaoTokenURI}")
+    private String KAKAO_TOKEN_URI;
+    @Value("${kakao.kakaoUserInfoURI}")
+    private String KAKAO_USER_INFO_URI;
 
     // 회원 단일 정보 조회
     public UserDetailResponseDTO detail(String id){
@@ -98,4 +120,94 @@ public class UserService {
         List<User> allByOrderByScore = userRepository.findAllByOrderByScore();
         return allByOrderByScore;
     }
+
+    public KakaoTokenDTO getKakaoAccessToken(String code) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        // Http Response Body 객체 생성
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code"); //카카오 공식문서 기준 authorization_code 로 고정
+        params.add("client_id", KAKAO_CLIENT_ID); // 카카오 Dev 앱 REST API 키
+        params.add("redirect_uri", KAKAO_REDIRECT_URI); // 카카오 Dev redirect uri
+        params.add("code", code); // 프론트에서 인가 코드 요청시 받은 인가 코드값
+        params.add("client_secret", KAKAO_CLIENT_SECRET); // 카카오 Dev 카카오 로그인 Client Secret
+
+        // 헤더와 바디 합치기 위해 Http Entity 객체 생성
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+
+        // 카카오로부터 Access token 받아오기
+        RestTemplate rt = new RestTemplate();
+        ResponseEntity<String> accessTokenResponse = rt.exchange(
+                KAKAO_TOKEN_URI,
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                String.class
+        );
+
+        // JSON Parsing (-> KakaoTokenDto)
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        KakaoTokenDTO kakaoTokenDTO = null;
+        try {
+            kakaoTokenDTO = objectMapper.readValue(accessTokenResponse.getBody(), KakaoTokenDTO.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return kakaoTokenDTO;
+    }
+
+    // 카카오 로그인 처리
+    public void kakaoLogin(String kakaoAccessToken) {
+
+        // 토큰을 통해서 사용자 정보 가져오기
+        KakaoUserResponseDTO dto = getKakaoUserInfo(kakaoAccessToken);
+
+        // 카카오에서 받은 회원정보로 우리 사이트 회원가입
+        String nickname = dto.getProperties().getNickname();
+        User existOwner = userRepository.findById(nickname).orElse(null);
+        // 회원 중복확인 - 원래는 이메일로 검사해야함
+        if (existOwner != null) {
+            userRepository.save(
+                    UserNewRequestDTO.builder()
+                            .id(nickname)
+                            .pw("0000")
+                            .nickname(nickname)
+                            .
+                            .build(),
+            );
+        }
+
+        // 우리 사이트 로그인 처리
+        memberService.maintainLoginState(session, nickname);
+
+
+    }
+
+    private KakaoUserResponseDTO getKakaoUserInfo(String accessToken) {
+
+        // 요청 헤더
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        // 요청 보내기
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<KakaoUserResponseDTO> responseEntity = template.exchange(
+                KAKAO_USER_INFO_URI,
+                HttpMethod.POST,
+                new HttpEntity<>(headers),
+                KakaoUserResponseDTO.class
+        );
+
+        // 응답 정보 꺼내기
+        KakaoUserResponseDTO responseJSON = responseEntity.getBody();
+        log.debug("user profile: {}", responseJSON);
+
+        return responseJSON;
+    }
+
 }

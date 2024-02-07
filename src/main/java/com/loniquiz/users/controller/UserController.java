@@ -23,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -201,5 +202,12 @@ public class UserController {
                 .body(
                         users
                 );
+    }
+
+    @GetMapping("/oauth")
+    public ResponseEntity<UserResponseDTO> kakaoLogin(HttpServletRequest request) {
+        String code = request.getParameter("code");
+        String kakaoAccessToken = userService.getKakaoAccessToken(code).getAccess_token();
+        return userService.kakaoLogin(kakaoAccessToken);
     }
 }

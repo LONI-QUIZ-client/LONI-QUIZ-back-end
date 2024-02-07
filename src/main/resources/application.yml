@@ -32,3 +32,10 @@ jwt:
 root:
   path: D:/spring-prj/upload/side-menu
 #  path: /Users/youngheeso/Desktop/aiimage-prj
+
+kakao:
+  kakaoClientID: b11f2fab760f545cb7340313e13ec03b
+  kakaoRedirectURI: http://localhost:3000/oauth
+  kakaoClientSecret: YcRztaZO6EUpXdRURxFbYFd4mmSOrqcC
+  kakaoTokenURI: https://kauth.kakao.com/oauth/token
+  kakaoUserInfoURI: https://kapi.kakao.com/v2/user/me
