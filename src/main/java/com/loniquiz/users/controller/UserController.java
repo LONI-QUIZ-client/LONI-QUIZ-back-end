@@ -2,10 +2,12 @@ package com.loniquiz.users.controller;
 
 import com.loniquiz.auth.TokenProvider;
 import com.loniquiz.auth.TokenUserInfo;
+import com.loniquiz.game.lobby.dto.request.UserSearchRequestDTO;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
+import com.loniquiz.users.dto.response.UserSearchResponseDTO;
 import com.loniquiz.users.dto.response.UserSortResponseDTO;
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.service.UserService;
@@ -152,6 +154,10 @@ public class UserController {
                 );
     }
 
+    /*
+    다른 회원의 이미즈를 뿌려주기 위한 코드
+     */
+
     @GetMapping("/profile-image/{id}")
     public ResponseEntity<?> userProfileImage(
             @PathVariable String id
@@ -244,6 +250,20 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(
                         users
+                );
+    }
+
+
+    // 회원 정보 검색 및 뿌리기
+    @PostMapping("/nickname")
+    public ResponseEntity<?> searchUser(
+            @RequestBody UserSearchRequestDTO dto
+    ){
+        List<UserSearchResponseDTO> user = userService.findUser(dto.getNickname());
+        return ResponseEntity
+                .ok()
+                .body(
+                        user
                 );
     }
 }

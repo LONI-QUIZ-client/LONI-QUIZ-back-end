@@ -30,4 +30,5 @@ public interface GameLobbyRepository extends JpaRepository<GameLobby, String> {
     @Query(value = "update tbl_game_room set lobby_user_count = lobby_user_count - 1 where lobby_id = :lid",
             nativeQuery = true)
     void downUserCount(String lid);
+
 }
