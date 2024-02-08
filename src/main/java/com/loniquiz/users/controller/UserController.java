@@ -2,14 +2,20 @@ package com.loniquiz.users.controller;
 
 import com.loniquiz.auth.TokenProvider;
 import com.loniquiz.auth.TokenUserInfo;
+import com.loniquiz.game.lobby.dto.request.UserSearchRequestDTO;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
+import com.loniquiz.users.dto.response.KakaoLoginResponseDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
+import com.loniquiz.users.dto.response.UserSearchResponseDTO;
+import com.loniquiz.users.dto.response.UserSortResponseDTO;
+import com.loniquiz.users.entity.User;
 import com.loniquiz.users.service.UserService;
 import com.loniquiz.utils.upload.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,8 +27,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -70,15 +78,22 @@ public class UserController {
                     );
         }
 
+        String uploadProfileImagePath = null;
 
         File file = new File(rootPath);
-
         if (!file.exists()) file.mkdirs();
 
+        if(profileImage!=null){
+            uploadProfileImagePath = FileUtil.uploadFile(profileImage, rootPath);
+        }
+
+        boolean newUser = userService.newUser(dto, uploadProfileImagePath);
+
+
+        /*File file = new File(rootPath);
+        if (!file.exists()) file.mkdirs();
         String savePath = FileUtil.uploadFile(profileImage, rootPath);
-
-
-        boolean newUser = userService.newUser(dto, savePath);
+        boolean newUser = userService.newUser(dto, savePath);*/
 
         log.info("회원가입을 위한 post매핑 접속 dto : {}", dto);
 
@@ -141,18 +156,58 @@ public class UserController {
                 );
     }
 
-    @GetMapping("/profile-image")
-    public ResponseEntity<?> loadProfileImage(
-            @AuthenticationPrincipal TokenUserInfo userInfo
-            ){
-        System.out.println("userInfo = " + userInfo);
+    /*
+    다른 회원의 이미즈를 뿌려주기 위한 코드
+     */
+
+    @GetMapping("/profile-image/{id}")
+    public ResponseEntity<?> userProfileImage(
+            @PathVariable String id
+    ){
+        log.info("profile-image/id GET");
+
+
         try {
-            String profilePath = userService.getProfileImage(userInfo.getUserId());
+            String profilePath = userService.getProfileImage(id);
+
             File profileFile = new File(rootPath + profilePath);
             if(!profileFile.exists()) return ResponseEntity.notFound().build();
 
             byte[] fileDate = FileCopyUtils.copyToByteArray(profileFile);
 
+            HttpHeaders headers = new HttpHeaders();
+
+            MediaType mediaType = extractFileExtension(profilePath);
+
+            if (mediaType == null){
+                return ResponseEntity.internalServerError()
+                        .body("발견된 파일은 이미지가 아닙니다.");
+            }
+
+            headers.setContentType(mediaType);
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(fileDate);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/profile-image")
+    public ResponseEntity<?> loadProfileImage(
+            @AuthenticationPrincipal TokenUserInfo userInfo
+            ){
+        try {
+            String profilePath = userService.getProfileImage(userInfo.getUserId());
+
+            File profileFile = new File(rootPath + profilePath);
+            if(!profileFile.exists()) return ResponseEntity.notFound().build();
+
+            byte[] fileDate = FileCopyUtils.copyToByteArray(profileFile);
 
             HttpHeaders headers = new HttpHeaders();
 
@@ -190,4 +245,36 @@ public class UserController {
                 return null;
         }
     }
+
+    @GetMapping("/order/score")
+    public ResponseEntity<?> orderScore(){
+        List<UserSortResponseDTO> users = userService.orderByScore();
+        return ResponseEntity.ok()
+                .body(
+                        users
+                );
+    }
+
+    @GetMapping("/oauth")
+    public  ResponseEntity<?> kakaoLogin(HttpServletRequest request) {
+        String code = request.getParameter("code");
+        System.out.println("code = " + code);
+        String kakaoAccessToken = userService.getKakaoAccessToken(code);
+        UserResponseDTO userResponseDTO = userService.kakaoLogin(kakaoAccessToken);
+        return ResponseEntity.ok().body(userResponseDTO);
+    }
+
+    // 회원 정보 검색 및 뿌리기
+    @PostMapping("/nickname")
+    public ResponseEntity<?> searchUser(
+            @RequestBody UserSearchRequestDTO dto
+    ){
+        List<UserSearchResponseDTO> user = userService.findUser(dto.getNickname());
+        return ResponseEntity
+                .ok()
+                .body(
+                        user
+                );
+    }
+
 }
