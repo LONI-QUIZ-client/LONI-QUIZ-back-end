@@ -3,7 +3,14 @@ package com.loniquiz.users.service;
 import com.loniquiz.auth.TokenProvider;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
+
 import com.loniquiz.users.dto.response.*;
+
+import com.loniquiz.users.dto.response.UserDetailResponseDTO;
+import com.loniquiz.users.dto.response.UserResponseDTO;
+import com.loniquiz.users.dto.response.UserSearchResponseDTO;
+import com.loniquiz.users.dto.response.UserSortResponseDTO;
+
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +30,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -118,9 +127,24 @@ public class UserService {
         return profileImage;
     }
 
-    public List<User> orderByScore(){
-        List<User> allByOrderByScore = userRepository.findAllByOrderByScore();
-        return allByOrderByScore;
+    public List<UserSortResponseDTO> orderByScore(){
+        List<User> SortUser = userRepository.findAllByOrderByScore();
+
+        List<UserSortResponseDTO> dtoList = SortUser.stream()
+                .map(user -> new UserSortResponseDTO(user))
+                .collect(Collectors.toList());
+        return dtoList;
+    }
+
+    // 사용자 검색
+    public List<UserSearchResponseDTO> findUser(String nickname){
+        List<User> nickName = userRepository.findByNicknameContaining(nickname);
+
+        List<UserSearchResponseDTO> userList = nickName.stream()
+                .map(user -> new UserSearchResponseDTO(user))
+                .collect(Collectors.toList());
+
+        return userList;
     }
 
     // 카카오 로그인 처리

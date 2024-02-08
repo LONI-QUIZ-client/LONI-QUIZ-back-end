@@ -15,6 +15,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     boolean existsById(String id);
     boolean existsByNickname(String nickname);
 
+    @Query(value = "select * from tbl_user order by user_score DESC limit 0, 5", nativeQuery = true)
     List<User> findAllByOrderByScore();
+
+    List<User> findByNicknameContaining(String nickname);
 
 }
