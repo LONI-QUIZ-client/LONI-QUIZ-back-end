@@ -30,6 +30,12 @@ jwt:
   secret: M/uO5Lteyy9MOQ/iwsThpR5yi4/R737xT4gZQlqz0xyZSTq3VAmdrcA1uCSx6JZ6cjwJDsFG+LyeX5a3wt28wQ==
 
 root:
+  path: /Users/bum_jun2/Desktop/LONI/Test
+#  path: /Users/youngheeso/Desktop/aiimage-prj
+
+# 로그인, 회원가입 랜덤 이미지
+sideMenu:
+  path: /Users/youngheeso/Desktop/aiimage-prj/sideMenu
 
   path: D:/spring-prj/upload/side-menu
 #  path: /Users/youngheeso/Desktop/aiimage-prj
@@ -43,7 +49,4 @@ kakao:
   kakaoTokenURI: https://kauth.kakao.com/oauth/token
   kakaoUserInfoURI: https://kapi.kakao.com/v2/user/me
 
-# 로그인, 회원가입 랜덤 이미지
-#sideMenu:
-#  path: /Users/youngheeso/Desktop/aiimage-prj/sideMenu
 
