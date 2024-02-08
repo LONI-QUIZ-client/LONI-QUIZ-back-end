@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loniquiz.chatEntity.ChatResponse;
 import com.loniquiz.comment.lobby.dto.request.ImageRequestDTO;
+import com.loniquiz.comment.lobby.dto.request.TimerRequestDTO;
 import com.loniquiz.comment.lobby.dto.response.ForCheckResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
 import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;

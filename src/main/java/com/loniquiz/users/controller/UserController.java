@@ -262,6 +262,7 @@ public class UserController {
         String kakaoAccessToken = userService.getKakaoAccessToken(code);
         UserResponseDTO userResponseDTO = userService.kakaoLogin(kakaoAccessToken);
         return ResponseEntity.ok().body(userResponseDTO);
+    }
 
     // 회원 정보 검색 및 뿌리기
     @PostMapping("/nickname")
@@ -275,4 +276,5 @@ public class UserController {
                         user
                 );
     }
+
 }
