@@ -4,6 +4,7 @@ import com.loniquiz.auth.TokenProvider;
 import com.loniquiz.auth.TokenUserInfo;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
+import com.loniquiz.users.dto.response.KakaoLoginResponseDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
 import com.loniquiz.users.entity.User;
@@ -205,9 +206,11 @@ public class UserController {
     }
 
     @GetMapping("/oauth")
-    public ResponseEntity<UserResponseDTO> kakaoLogin(HttpServletRequest request) {
+    public  ResponseEntity<?> kakaoLogin(HttpServletRequest request) {
         String code = request.getParameter("code");
-        String kakaoAccessToken = userService.getKakaoAccessToken(code).getAccess_token();
-        return userService.kakaoLogin(kakaoAccessToken);
+        System.out.println("code = " + code);
+        String kakaoAccessToken = userService.getKakaoAccessToken(code);
+        userService.kakaoLogin(kakaoAccessToken);
+        return ResponseEntity.ok().body(null);
     }
 }
