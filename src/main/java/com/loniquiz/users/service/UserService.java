@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -123,16 +124,34 @@ public class UserService {
     }
 
     // 카카오 로그인 처리
-    public void kakaoLogin(String accessToken) {
+    public UserResponseDTO kakaoLogin(String accessToken) {
 
         // 토큰을 통해서 사용자 정보 가져오기
-        Object kakaoUserInfo = getKakaoUserInfo(accessToken);
+        KakaoUserResponseDTO kakaoUserInfo = getKakaoUserInfo(accessToken);
         System.out.println("kakaoUserInfo = " + kakaoUserInfo);
 
 
+        if (!userRepository.existsByNickname(kakaoUserInfo.getProperties().getNickname())){
+            User user = userRepository.save(new KakaoLoginSaveResponseDTO().toEntity(kakaoUserInfo, encoder));
+            UserResponseDTO login = login(
+                    UserLoginRequestDTO.builder()
+                            .id(kakaoUserInfo.getId())
+                            .pw("0000")
+                            .build()
+            );
+            return login;
+        }else {
+            UserResponseDTO login = login(
+                    UserLoginRequestDTO.builder()
+                            .id(kakaoUserInfo.getId())
+                            .pw("0000")
+                            .build()
+            );
+            return login;
+        }
     }
     // 토큰으로 사용자 정보 요청
-    private Object getKakaoUserInfo(String accessToken) {
+    private KakaoUserResponseDTO getKakaoUserInfo(String accessToken) {
 
         // 요청 헤더
         HttpHeaders headers = new HttpHeaders();
@@ -141,14 +160,15 @@ public class UserService {
 
         // 요청 보내기
         RestTemplate template = new RestTemplate();
-        ResponseEntity<?> responseEntity = template.exchange(
+        ResponseEntity<KakaoUserResponseDTO> responseEntity = template.exchange(
                 KAKAO_USER_INFO_URI,
                 HttpMethod.POST,
                 new HttpEntity<>(headers),
-                String.class
+                KakaoUserResponseDTO.class
         );
 
-        Object body = responseEntity.getBody();
+        KakaoUserResponseDTO body = responseEntity.getBody();
+
         return body;
 
     }

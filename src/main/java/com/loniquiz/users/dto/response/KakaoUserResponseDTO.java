@@ -13,11 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class KakaoUserResponseDTO {
 
-    private Long id;
-
-    @JsonProperty("connected_at")
-    private LocalDateTime connectedAt;
-
+    private String id;
     private Properties properties;
 
 
@@ -28,8 +24,6 @@ public class KakaoUserResponseDTO {
         private String nickname;
         @JsonProperty("profile_image")
         private String profileImage;
-        @JsonProperty("thumbnail_image")
-        private String thumbnailImage;
     }
 
 }

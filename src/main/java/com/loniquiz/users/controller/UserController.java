@@ -210,7 +210,7 @@ public class UserController {
         String code = request.getParameter("code");
         System.out.println("code = " + code);
         String kakaoAccessToken = userService.getKakaoAccessToken(code);
-        userService.kakaoLogin(kakaoAccessToken);
-        return ResponseEntity.ok().body(null);
+        UserResponseDTO userResponseDTO = userService.kakaoLogin(kakaoAccessToken);
+        return ResponseEntity.ok().body(userResponseDTO);
     }
 }
