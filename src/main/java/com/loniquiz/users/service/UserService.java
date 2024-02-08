@@ -145,7 +145,7 @@ public class UserService {
                 KAKAO_USER_INFO_URI,
                 HttpMethod.POST,
                 new HttpEntity<>(headers),
-                KakaoUserResponseDTO.class
+                String.class
         );
 
         Object body = responseEntity.getBody();
