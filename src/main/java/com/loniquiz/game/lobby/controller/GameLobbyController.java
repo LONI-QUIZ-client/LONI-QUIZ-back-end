@@ -37,9 +37,9 @@ public class GameLobbyController {
     // 방 생성
     @PostMapping
     public ResponseEntity<?> lobbyCreate(
+            PageRequestDTO pageRequestDTO,
             @Validated
             @RequestBody GameLobbyCreateDTO dto,
-            PageRequestDTO pageRequestDTO,
             BindingResult result
     ) {
         if (result.hasErrors()) {

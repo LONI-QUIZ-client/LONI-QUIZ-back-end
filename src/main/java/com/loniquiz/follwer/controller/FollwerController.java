@@ -7,6 +7,7 @@ import com.loniquiz.follwer.service.FollwerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +36,9 @@ public class FollwerController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findFollowerList(TokenUserInfo userInfo){
+    public ResponseEntity<?> findFollowerList(
+            @AuthenticationPrincipal TokenUserInfo userInfo
+    ){
         List<FollwerListResponseDTO> followerList =
                 follwerService.getFollowerList(userInfo.getUserId());
 

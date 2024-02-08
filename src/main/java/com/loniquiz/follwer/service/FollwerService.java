@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,11 +35,12 @@ public class FollwerService {
 
     // 팔로워 전체 조회
     public List<FollwerListResponseDTO> getFollowerList(String userId){
-        List<Follower> followerList = follwerRepository.findByUser(findOneUser(userId));
+        List<Follower> followerList = follwerRepository.findByFollwerId(userId);
 
         List<FollwerListResponseDTO> dtoList = followerList.stream()
                 .map(follower -> new FollwerListResponseDTO(follower))
                 .collect(Collectors.toList());
+
 
         return dtoList;
     }
