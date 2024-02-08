@@ -1,4 +1,4 @@
-package com.loniquiz.comment.lobby.dto.request;
+package com.loniquiz.comment.lobby.dto.response;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ImageRequestDTO {
+public class UserPointUpResponseDTO {
     private String gno;
-    private String image;
+    private String userId;
 }

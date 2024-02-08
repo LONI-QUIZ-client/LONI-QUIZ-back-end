@@ -5,6 +5,7 @@ import com.loniquiz.auth.TokenUserInfo;
 import com.loniquiz.game.lobby.dto.request.UserSearchRequestDTO;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
+import com.loniquiz.users.dto.response.KakaoLoginResponseDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
 import com.loniquiz.users.dto.response.UserSearchResponseDTO;
@@ -26,6 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -253,6 +255,13 @@ public class UserController {
                 );
     }
 
+    @GetMapping("/oauth")
+    public  ResponseEntity<?> kakaoLogin(HttpServletRequest request) {
+        String code = request.getParameter("code");
+        System.out.println("code = " + code);
+        String kakaoAccessToken = userService.getKakaoAccessToken(code);
+        UserResponseDTO userResponseDTO = userService.kakaoLogin(kakaoAccessToken);
+        return ResponseEntity.ok().body(userResponseDTO);
 
     // 회원 정보 검색 및 뿌리기
     @PostMapping("/nickname")
