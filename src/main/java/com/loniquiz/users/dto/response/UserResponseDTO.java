@@ -14,7 +14,6 @@ import lombok.*;
 public class UserResponseDTO {
     private String id;
     private String userNickname;
-
     private String token;
 
     public UserResponseDTO(User user, String token){

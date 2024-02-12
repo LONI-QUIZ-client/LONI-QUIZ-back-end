@@ -79,17 +79,29 @@ public class UserService {
                 () -> new RuntimeException("아이디가 존재하지 않습니다")
         );
 
-
         String userPw = dto.getPw();
         String encodingPw = user.getPw();
 
         if (!encoder.matches(userPw, encodingPw)){
             throw new RuntimeException("비밀번호가 일치하지 않습니다");
         }
+
         String token = tokenProvider.createToken(user);
+        user.setLoginState(true);
+
         return new UserResponseDTO(user, token);
     }
 
+    // 로그아웃 처리
+    public UserDetailResponseDTO logout(String id){
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("아이디가 존재하지 않습니다")
+        );
+
+        user.setLoginState(false);
+
+        return new UserDetailResponseDTO();
+    }
 
     // 회원 탈퇴 기능
     public boolean delete(String id){

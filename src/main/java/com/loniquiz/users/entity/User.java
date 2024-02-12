@@ -3,7 +3,9 @@ import com.loniquiz.comment.lobby.entity.LobbyChat;
 import com.loniquiz.follwer.entity.Follower;
 import com.loniquiz.game.members.entity.GameMembers;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -45,7 +47,11 @@ public class User {
     private String sessionId; // 자동 로그인을 위한 세션 아이디
 
     @Column(name = "profile_image")
-    private String profileImage; // 사용자 프로필 이미
+    private String profileImage; // 사용자 프로필 이미지
+
+    @Column(name = "login_state")
+    @ColumnDefault("false")
+    private boolean loginState; // 로그인 상태
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<GameMembers> gameRooms = new ArrayList<>();

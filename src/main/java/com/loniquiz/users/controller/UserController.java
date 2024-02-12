@@ -45,12 +45,12 @@ public class UserController {
 
 
     // 회원 단일 조회를 위한 컨트롤러
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> detailUser(@PathVariable String userId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> detailUser(@PathVariable String id) {
 
-        log.info("user id : {}", userId);
+        log.info("user id : {}", id);
         try {
-            UserDetailResponseDTO user = userService.detail(userId);
+            UserDetailResponseDTO user = userService.detail(id);
             return ResponseEntity.ok()
                     .body(
                             user
@@ -125,6 +125,16 @@ public class UserController {
         }
     }
 
+    // 로그아웃 처리
+    @PostMapping("/logout/{id}")
+    public ResponseEntity<?> logoutUser(
+            @PathVariable String id
+    ){
+        UserDetailResponseDTO logout = userService.logout(id);
+
+        return ResponseEntity.ok().body(logout);
+    }
+
     // 회원 탈퇴 컨트롤러
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(
@@ -169,6 +179,9 @@ public class UserController {
 
         try {
             String profilePath = userService.getProfileImage(id);
+            if(profilePath==null){
+                return ResponseEntity.ok().body(null);
+            }
 
             File profileFile = new File(rootPath + profilePath);
             if(!profileFile.exists()) return ResponseEntity.notFound().build();
