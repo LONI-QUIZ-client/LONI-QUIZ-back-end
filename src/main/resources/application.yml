@@ -5,10 +5,11 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     #    url: jdbc:mariadb://localhost:3307/aiimage
-    url: jdbc:mariadb://localhost:3306/aiimage
+#    url: jdbc:mariadb://localhost:3306/aiimage
+    url: jdbc:mariadb://localhost:3306/aigame
     username: root
-#    password: 1234
-    password: mariadb
+    password: 1234
+#    password: mariadb
   jpa:
     # SQL??? ?? ? ?? DBMS? ???? ??? ????
     database-platform: org.hibernate.dialect.MariaDB106Dialect
@@ -29,14 +30,15 @@ jwt:
   secret: M/uO5Lteyy9MOQ/iwsThpR5yi4/R737xT4gZQlqz0xyZSTq3VAmdrcA1uCSx6JZ6cjwJDsFG+LyeX5a3wt28wQ==
 
 root:
-  path: /Users/bum_jun2/Desktop/LONI/Test
+#  path: /Users/bum_jun2/Desktop/LONI/Test
 #  path: /Users/youngheeso/Desktop/aiimage-prj
+  path: D:/spring-prj/upload/side-menu
 
 # 로그인, 회원가입 랜덤 이미지
 sideMenu:
 #  path: /Users/youngheeso/Desktop/aiimage-prj/sideMenu
-#  path: D:/spring-prj/upload/side-menu
-  path: /Users/bum_jun2/Desktop/LONI/Test
+  path: D:/spring-prj/upload/side-menu
+#  path: /Users/bum_jun2/Desktop/LONI/Test
 
 kakao:
   kakaoClientID: b11f2fab760f545cb7340313e13ec03b

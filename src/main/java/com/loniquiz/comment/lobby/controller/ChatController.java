@@ -170,7 +170,7 @@ public class ChatController {
 
         scheduler.scheduleAtFixedRate(() -> {
             int currentCountdown = countdown.getAndDecrement();
-            if (currentCountdown > 0) {
+            if (currentCountdown >= 0) {
                 System.out.println("Room ID: " + roomId + ", Remaining Time: " + currentCountdown + " seconds");
                 dto.setTime(currentCountdown);
                 messagingTemplate.convertAndSend("/topic/game/timer/" + roomId, dto);
