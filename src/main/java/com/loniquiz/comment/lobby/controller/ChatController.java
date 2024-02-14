@@ -55,7 +55,7 @@ public class ChatController {
 
     @MessageMapping("/game/userPointUp")
     @SendTo("/topic/game/userPointUp")
-    public void userPointUp(@Payload UserPointUpResponseDTO res) {
+    public UserPointUpResponseDTO userPointUp(@Payload UserPointUpResponseDTO res) {
         System.out.println("여기까지 오기는 하냐아ㅏㅏㅏㅏㅏㅏㅏㅏ");
         // gameMembers 리스트에서 gno가 일치하는 GameMemberList 찾기
         Optional<GameMemberList> optionalGameMemberList = gameMembers.stream()
@@ -77,9 +77,15 @@ public class ChatController {
 
                 // Member의 포인트를 1 증가시키기
                 member.setPoint(member.getPoint() + 1);
+                UserPointUpResponseDTO userPointUpResponseDTO = new UserPointUpResponseDTO();
+                userPointUpResponseDTO.setGno(res.getGno());
+                userPointUpResponseDTO.setUserId(member.getUserId());
+
+                return userPointUpResponseDTO;
             }
         }
         System.out.println("gameMembers = " + gameMembers);
+        return null;
     }
 
     @MessageMapping("/game/answerKey")
