@@ -22,6 +22,7 @@ import javax.persistence.*;
 public class Follower {
 
     @Id
+    @Column(name = "uuid")
     @GeneratedValue(generator = "uid")
     @GenericGenerator(strategy = "uuid", name = "uid")
     private String id;
