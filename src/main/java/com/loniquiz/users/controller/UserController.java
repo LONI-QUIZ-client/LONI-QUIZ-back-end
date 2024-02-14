@@ -44,7 +44,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<?> detailUser(@PathVariable String id) {
 
-        log.info("user id : {}", id);
+        log.info("user id: {}", id);
         try {
             UserDetailResponseDTO user = userService.detail(id);
             return ResponseEntity.ok()
@@ -56,7 +56,6 @@ public class UserController {
                     .body(e.getMessage());
         }
     }
-
 
     // 회원가입을 위한 컨트롤러
     @PostMapping
