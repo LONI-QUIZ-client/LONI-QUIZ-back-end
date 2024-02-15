@@ -73,6 +73,18 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void updateScore(String userId, int point) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId));
+
+        // 기존 점수에 새로운 포인트를 더합니다.
+        int newScore = user.getScore() + point;
+        user.setScore(newScore);
+
+        userRepository.save(user);
+    }
+
     // 프로필 변경
     public boolean changeProfile(
             String profilePath
