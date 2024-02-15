@@ -47,4 +47,19 @@ public class FollwerController {
                         followerList
                 );
     }
+
+    @PostMapping("/check")
+    public ResponseEntity<?> flag(
+            @RequestBody
+            FollwerRequestDTO dto
+    ){
+
+
+        boolean flag = follwerService.follower(dto);
+
+        return ResponseEntity.ok()
+                .body(
+                        flag
+                );
+    }
 }

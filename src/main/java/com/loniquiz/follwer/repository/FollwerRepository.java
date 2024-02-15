@@ -8,4 +8,10 @@ import java.util.List;
 
 public interface FollwerRepository extends JpaRepository<Follower, String> {
     List<Follower> findByFollwerId(String userId);
+
+    boolean existsByFollwerId(String fid);
+
+    void deleteByFollwerId(String fid);
+
+    boolean existsByFollwerIdAndUser(String find, User user);
 }

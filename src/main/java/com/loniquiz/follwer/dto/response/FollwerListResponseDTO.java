@@ -13,7 +13,7 @@ import lombok.*;
 public class FollwerListResponseDTO {
     private String fi;
     private String userId;
-
+    private boolean flag;
     public FollwerListResponseDTO(Follower follower) {
         this.fi = follower.getFollwerId();
         this.userId = follower.getFollwerId();

@@ -165,12 +165,16 @@ public class ChatController {
     @MessageMapping("/game/timer/{roomId}")
     @SendTo("/topic/game/timer/{roomId}")
     public TimerRequestDTO sendTimer(@Payload TimerRequestDTO dto, @DestinationVariable String roomId) {
+
+        System.out.println("dto.isCheck() = " + dto.isCheck());
+
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         AtomicInteger countdown = new AtomicInteger(10); // 초기 카운트다운 값
 
         scheduler.scheduleAtFixedRate(() -> {
             int currentCountdown = countdown.getAndDecrement();
-            if (currentCountdown > 0) {
+
+            if (currentCountdown > 0 && !dto.isCheck()) {
                 System.out.println("Room ID: " + roomId + ", Remaining Time: " + currentCountdown + " seconds");
                 dto.setTime(currentCountdown);
                 messagingTemplate.convertAndSend("/topic/game/timer/" + roomId, dto);

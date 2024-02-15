@@ -12,4 +12,5 @@ import lombok.*;
 public class TimerRequestDTO {
     private String gno;
     private int time;
+    private boolean check;
 }

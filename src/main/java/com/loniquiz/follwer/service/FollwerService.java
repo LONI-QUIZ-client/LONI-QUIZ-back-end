@@ -27,7 +27,15 @@ public class FollwerService {
     public List<FollwerListResponseDTO> saveFollower(FollwerRequestDTO dto){
         User user = findOneUser(dto.getUserId());
 
-        follwerRepository.save(dto.toEnity(user));
+        List<Follower> followerList = follwerRepository.findByFollwerId(dto.getFid());
+
+        boolean b = follwerRepository.existsByFollwerId(dto.getFid());
+
+        if (b){
+            follwerRepository.deleteByFollwerId(dto.getFid());
+        }else{
+            follwerRepository.save(dto.toEnity(user));
+        }
 
         return getFollowerList(dto.getUserId());
     }
@@ -50,5 +58,14 @@ public class FollwerService {
     private User findOneUser(String userId){
         User user = userRepository.findById(userId).orElseThrow();
         return user;
+    }
+
+
+    public boolean follower(FollwerRequestDTO dto){
+        User user = findOneUser(dto.getUserId());
+        boolean flag =
+                follwerRepository.existsByFollwerIdAndUser(dto.getFid(), user);
+
+        return flag;
     }
 }
