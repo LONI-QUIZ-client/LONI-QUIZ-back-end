@@ -4,6 +4,7 @@ import com.loniquiz.auth.TokenUserInfo;
 import com.loniquiz.follwer.dto.request.FollwerRequestDTO;
 import com.loniquiz.follwer.dto.response.FollwerListResponseDTO;
 import com.loniquiz.follwer.service.FollwerService;
+import com.loniquiz.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/follower")
 @CrossOrigin(origins = {"http://localhost:3000"}, allowCredentials = "true")
 public class FollwerController {
+
     private final FollwerService follwerService;
 
 
@@ -53,8 +55,6 @@ public class FollwerController {
             @RequestBody
             FollwerRequestDTO dto
     ){
-
-
         boolean flag = follwerService.follower(dto);
 
         return ResponseEntity.ok()
