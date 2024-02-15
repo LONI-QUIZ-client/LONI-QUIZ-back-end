@@ -35,12 +35,12 @@ public class FollwerController {
                 );
     }
 
-    @GetMapping
+    @GetMapping("/{userId}")
     public ResponseEntity<?> findFollowerList(
-            @AuthenticationPrincipal TokenUserInfo userInfo
+            @PathVariable String userId
     ){
         List<FollwerListResponseDTO> followerList =
-                follwerService.getFollowerList(userInfo.getUserId());
+                follwerService.getFollowerList(userId);
 
         return ResponseEntity.ok()
                 .body(
