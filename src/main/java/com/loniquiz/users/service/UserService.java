@@ -1,6 +1,7 @@
 package com.loniquiz.users.service;
 
 import com.loniquiz.auth.TokenProvider;
+import com.loniquiz.aws.S3Service;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 
@@ -26,11 +27,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,6 +60,11 @@ public class UserService {
 
     @Value("${kakao.kakaoUserInfoURI}")
     private String KAKAO_USER_INFO_URI;
+
+    private final S3Service s3Service;
+
+    @Value("${root.path}")
+    private String rootPath; // 파일 저장 루트경로
 
     // 회원 단일 정보 조회
     public UserDetailResponseDTO detail(String id){
@@ -230,5 +239,36 @@ public class UserService {
         String accessToken = (String) responseJSON.get("access_token");
         System.out.println("accessToken = " + accessToken);
         return accessToken;
+    }
+
+
+    public String uploadProfileImage(MultipartFile originalFile) throws IOException {
+
+        //루트 디렉코리가 존재하는지 확인 후 존재하지 않으면 생성한다.
+//        File rootDir = new File(rootPath);
+
+//        if (!rootDir.exists()) rootDir.mkdir();
+
+        //파일명을 유니크하게 변경
+        String uniqueFileName = UUID.randomUUID() + "_" + originalFile.getOriginalFilename();
+
+        //파일을 서버에 저장
+//        File uploadFile = new File(rootPath + "/" + uniqueFileName);
+//        originalFile.transferTo(uploadFile);
+
+        // 파일을 s3버킷에 저장
+        String uploadedURL = s3Service.uploadToS3Bucket(originalFile.getBytes(), uniqueFileName);
+
+        return uploadedURL;
+    }
+
+    // 로그인한 회원의 프로필 사진 저장 경로를 조회
+    public String getProfilePath(String id){
+        // db에서 파일명을 조회
+        User user = userRepository.findById(id).orElseThrow();
+
+        String fileName = user.getProfileImage();
+
+        return fileName;
     }
 }
