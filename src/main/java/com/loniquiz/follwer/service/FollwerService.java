@@ -27,8 +27,6 @@ public class FollwerService {
     public List<FollwerListResponseDTO> saveFollower(FollwerRequestDTO dto){
         User user = findOneUser(dto.getUserId());
 
-        List<Follower> followerList = follwerRepository.findByFollwerId(dto.getFid());
-
         boolean b = follwerRepository.existsByFollwerId(dto.getFid());
 
         if (b){
@@ -43,7 +41,8 @@ public class FollwerService {
 
     // 팔로워 전체 조회
     public List<FollwerListResponseDTO> getFollowerList(String userId){
-        List<Follower> followerList = follwerRepository.findByFollwerId(userId);
+        User user = findOneUser(userId);
+        List<Follower> followerList = follwerRepository.findByUser(user);
 
         List<FollwerListResponseDTO> dtoList = followerList.stream()
                 .map(follower -> new FollwerListResponseDTO(follower))
