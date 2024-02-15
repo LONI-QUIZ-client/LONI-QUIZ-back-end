@@ -131,6 +131,7 @@ public class ChatController {
         }
 
         // 모든 조건을 통과한 경우에만 member 리스트에 추가
+        dto.setProfileImage(userService.getProfileImage(dto.getUserId()));
         member.add(dto);
         return "false";
 
@@ -229,7 +230,7 @@ public class ChatController {
                     Member mem = new Member();
                     mem.setUserId(memberDTO.getUserId());
                     mem.setName(memberDTO.getUsername());
-
+                    mem.setProfileImage(userService.getProfileImage(memberDTO.getUserId()));
                     // 첫 번째 멤버인 경우 state를 true로 설정하고, 그 외에는 false로 설정
                     mem.setTurn(isFirstMember);
                     isFirstMember = false; // 첫 번째 멤버가 아니므로 false로 설정

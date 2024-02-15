@@ -13,6 +13,7 @@ public class MemberResponseDTO {
     private String userId;
     private String gno;
     private String username;
+    private String profileImage;
     private int maxUser;
     private int lobbyMaxCount;
 }

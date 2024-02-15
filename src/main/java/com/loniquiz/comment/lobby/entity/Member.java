@@ -12,6 +12,7 @@ import lombok.*;
 public class Member {
     private String userId;
     private String name;
+    private String profileImage;
     private boolean turn;
     @Builder.Default
     private int point = 0;
