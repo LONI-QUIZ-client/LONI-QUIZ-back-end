@@ -14,6 +14,7 @@ import java.util.List;
 public class GameMemberList {
 
     private String gno;
+    private int count;
     private List<Member> members;
 
 }

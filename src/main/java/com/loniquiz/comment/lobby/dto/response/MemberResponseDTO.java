@@ -14,4 +14,5 @@ public class MemberResponseDTO {
     private String gno;
     private String username;
     private int maxUser;
+    private int lobbyMaxCount;
 }

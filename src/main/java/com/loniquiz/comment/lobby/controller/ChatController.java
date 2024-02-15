@@ -56,7 +56,6 @@ public class ChatController {
     @MessageMapping("/game/userPointUp")
     @SendTo("/topic/game/userPointUp")
     public UserPointUpResponseDTO userPointUp(@Payload UserPointUpResponseDTO res) {
-        System.out.println("여기까지 오기는 하냐아ㅏㅏㅏㅏㅏㅏㅏㅏ");
         // gameMembers 리스트에서 gno가 일치하는 GameMemberList 찾기
         Optional<GameMemberList> optionalGameMemberList = gameMembers.stream()
                 .filter(gameMemberList -> gameMemberList.getGno().equals(res.getGno()))
@@ -249,6 +248,7 @@ public class ChatController {
     @MessageMapping("/game/next")
     @SendTo("/topic/game/next")
     public void nextTurn(@Payload String gno) {
+
         try {
             // ObjectMapper 객체 생성
             ObjectMapper objectMapper = new ObjectMapper();
@@ -264,6 +264,7 @@ public class ChatController {
                 if (gameMemberList.getGno().equals(gnoValue)) {
                     GameMemberList targetGameMemberList = new GameMemberList();
                     targetGameMemberList = gameMemberList;
+                    targetGameMemberList.setCount(targetGameMemberList.getCount() + 1);
                     System.out.println("targetGameMemberList = " + targetGameMemberList);
                     if (targetGameMemberList != null) {
                         List<Member> members = targetGameMemberList.getMembers();
@@ -296,6 +297,12 @@ public class ChatController {
     public ImageRequestDTO imageSelect(@Payload ImageRequestDTO image) {
         System.out.println("image = " + image.getImage());
         return image;
+    }
+
+    @MessageMapping("/game/hasntAnswer")
+    @SendTo("/topic/game/hasntAnswer")
+    public void hasntAnswer() {
+        messagingTemplate.convertAndSend("/topic/game/hasntAnswer", true);
     }
 
     private void removeMemberFromSuperMemberList(List<MemberResponseDTO> superMember, String gno, String userId) {
