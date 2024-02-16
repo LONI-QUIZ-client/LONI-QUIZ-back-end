@@ -1,4 +1,4 @@
-package com.study.todoapi.config;
+package com.loniquiz.config;
 
 //전역 크로스오리진 설정 : 클라이언트 허용 아이피 설정
 
