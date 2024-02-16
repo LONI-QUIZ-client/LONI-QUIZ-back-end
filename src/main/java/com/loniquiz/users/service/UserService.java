@@ -82,6 +82,39 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void updateScore(String userId, int point) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId));
+
+        // 기존 점수에 새로운 포인트를 더합니다.
+        int newScore = user.getScore() + point;
+        user.setScore(newScore);
+
+        userRepository.save(user);
+    }
+
+    // 프로필 변경
+    public boolean changeProfile(
+            String profilePath
+            , String id
+    ){
+        if(profilePath!=null){
+            Optional<User> byId = userRepository.findById(id);
+            if (byId.isPresent()) { // 해당 ID에 해당하는 사용자가 존재하는지 확인
+                User user = byId.get();
+                user.setProfileImage(profilePath); // 프로필 이미지 경로 설정
+                userRepository.save(user);
+                return true;
+            } else {
+                log.info("해당 ID에 해당하는 사용자가 존재하지 않음");
+                return false; // 해당 ID에 해당하는 사용자가 존재하지 않음
+            }
+        } else {
+            return false;
+        }
+    }
+
     // 로그인 처리
     public UserResponseDTO login(UserLoginRequestDTO dto){
         User user = userRepository.findById(dto.getId()).orElseThrow(

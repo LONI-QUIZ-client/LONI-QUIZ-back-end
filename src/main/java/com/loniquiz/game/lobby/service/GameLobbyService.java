@@ -132,4 +132,12 @@ public class GameLobbyService {
             throw new RuntimeException();
         }
     }
+    public void deleteLobby(String gno){
+        try{
+            gameLobbyRepository.deleteById(gno);
+        }catch (Exception e){
+            log.error("아이디 또는 방 아이디가 맞지 않아 삭제 불가한다 : {}", gno);
+            throw new RuntimeException();
+        }
+    }
 }

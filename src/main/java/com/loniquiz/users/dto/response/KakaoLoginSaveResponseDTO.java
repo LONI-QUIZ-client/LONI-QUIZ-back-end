@@ -4,6 +4,8 @@ import com.loniquiz.users.entity.User;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @ToString
@@ -21,6 +23,7 @@ public class KakaoLoginSaveResponseDTO {
                 .id(dto.getId())
                 .pw(encoder.encode("0000"))
                 .nickname(dto.getProperties().getNickname())
+                .createDate(LocalDateTime.now())
                 .profileImage(dto.getProperties().getProfileImage())
                 .build();
     }

@@ -1,23 +1,19 @@
 package com.loniquiz.users.controller;
 
-import com.loniquiz.auth.TokenProvider;
 import com.loniquiz.auth.TokenUserInfo;
 import com.loniquiz.aws.S3Service;
 import com.loniquiz.game.lobby.dto.request.UserSearchRequestDTO;
 import com.loniquiz.users.dto.request.UserImageRequestDTO;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
-import com.loniquiz.users.dto.response.KakaoLoginResponseDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
 import com.loniquiz.users.dto.response.UserResponseDTO;
 import com.loniquiz.users.dto.response.UserSearchResponseDTO;
 import com.loniquiz.users.dto.response.UserSortResponseDTO;
-import com.loniquiz.users.entity.User;
 import com.loniquiz.users.service.UserService;
 import com.loniquiz.utils.upload.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -50,7 +46,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<?> detailUser(@PathVariable String id) {
 
-        log.info("user id : {}", id);
+        log.info("user id: {}", id);
         try {
             UserDetailResponseDTO user = userService.detail(id);
             return ResponseEntity.ok()
@@ -62,7 +58,6 @@ public class UserController {
                     .body(e.getMessage());
         }
     }
-
 
     // 회원가입을 위한 컨트롤러
     @PostMapping
@@ -101,6 +96,39 @@ public class UserController {
             return ResponseEntity.ok()
                     .body(
                             "나이스 회원가입 성공띠"
+                    );
+        }
+
+    }
+
+    @PostMapping("/change/profile")
+    public ResponseEntity<?> userDetailProfile(
+//            @RequestBody UserDetailProfileChangeRequestDTO dto
+            @Validated
+            @RequestPart(value = "userId", required = false) String id,
+            @RequestPart(value = "profileImagePath", required = false) MultipartFile changeProfile
+    ){
+
+        String uploadProfileImagePath = null;
+
+        File file = new File(rootPath);
+        if (!file.exists()) file.mkdirs();
+
+        if(changeProfile!=null){
+            uploadProfileImagePath = FileUtil.uploadFile(changeProfile, rootPath);
+        }
+
+        boolean changed = userService.changeProfile(uploadProfileImagePath, id);
+
+        if(changed){
+            return ResponseEntity.ok()
+                    .body(
+                            "프로필 이미지가 변경되었습니다"
+                    );
+        } else {
+            return ResponseEntity.badRequest()
+                    .body(
+                            "프로필 이미지 변경이 실패했습니다, 이미지 타입인지 확인해주세요"
                     );
         }
 

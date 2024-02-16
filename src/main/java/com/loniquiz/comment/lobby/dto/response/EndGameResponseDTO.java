@@ -9,11 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberResponseDTO {
-    private String userId;
+public class EndGameResponseDTO {
     private String gno;
-    private String username;
-    private String profileImage;
-    private int maxUser;
-    private int lobbyMaxCount;
 }

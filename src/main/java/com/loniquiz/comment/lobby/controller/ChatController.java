@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loniquiz.chatEntity.ChatResponse;
 import com.loniquiz.comment.lobby.dto.request.ImageRequestDTO;
 import com.loniquiz.comment.lobby.dto.request.TimerRequestDTO;
-import com.loniquiz.comment.lobby.dto.response.ForCheckResponseDTO;
-import com.loniquiz.comment.lobby.dto.response.GameChatResponseDTO;
-import com.loniquiz.comment.lobby.dto.response.MemberResponseDTO;
-import com.loniquiz.comment.lobby.dto.response.UserPointUpResponseDTO;
+import com.loniquiz.comment.lobby.dto.response.*;
 import com.loniquiz.comment.lobby.entity.GameMemberList;
 import com.loniquiz.comment.lobby.entity.Member;
+import com.loniquiz.game.lobby.service.GameLobbyService;
+import com.loniquiz.users.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
+@RequiredArgsConstructor
 public class ChatController {
 
     List<MemberResponseDTO> member = new ArrayList<>();
@@ -38,6 +39,9 @@ public class ChatController {
     List<MemberResponseDTO> superMember = new ArrayList<>();
 
     List<GameMemberList> gameMembers = new ArrayList<>();
+
+    private final UserService userService;
+    private final GameLobbyService gameLobbyService;
 
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
@@ -55,8 +59,7 @@ public class ChatController {
 
     @MessageMapping("/game/userPointUp")
     @SendTo("/topic/game/userPointUp")
-    public void userPointUp(@Payload UserPointUpResponseDTO res) {
-        System.out.println("여기까지 오기는 하냐아ㅏㅏㅏㅏㅏㅏㅏㅏ");
+    public UserPointUpResponseDTO userPointUp(@Payload UserPointUpResponseDTO res) {
         // gameMembers 리스트에서 gno가 일치하는 GameMemberList 찾기
         Optional<GameMemberList> optionalGameMemberList = gameMembers.stream()
                 .filter(gameMemberList -> gameMemberList.getGno().equals(res.getGno()))
@@ -77,9 +80,15 @@ public class ChatController {
 
                 // Member의 포인트를 1 증가시키기
                 member.setPoint(member.getPoint() + 1);
+                UserPointUpResponseDTO userPointUpResponseDTO = new UserPointUpResponseDTO();
+                userPointUpResponseDTO.setGno(res.getGno());
+                userPointUpResponseDTO.setUserId(member.getUserId());
+
+                return userPointUpResponseDTO;
             }
         }
         System.out.println("gameMembers = " + gameMembers);
+        return null;
     }
 
     @MessageMapping("/game/answerKey")
@@ -122,6 +131,7 @@ public class ChatController {
         }
 
         // 모든 조건을 통과한 경우에만 member 리스트에 추가
+        dto.setProfileImage(userService.getProfileImage(dto.getUserId()));
         member.add(dto);
         return "false";
 
@@ -135,6 +145,7 @@ public class ChatController {
         Thread.sleep(200);
         return member;
     }
+
     @MessageMapping("/game/exitRoom")
     @SendTo("/topic/game/exitRoom")
     public List<List<?>> exitRoom(@Payload UserPointUpResponseDTO res) {
@@ -161,7 +172,6 @@ public class ChatController {
     }
 
 
-
     @MessageMapping("/game/timer/{roomId}")
     @SendTo("/topic/game/timer/{roomId}")
     public TimerRequestDTO sendTimer(@Payload TimerRequestDTO dto, @DestinationVariable String roomId) {
@@ -174,7 +184,7 @@ public class ChatController {
         scheduler.scheduleAtFixedRate(() -> {
             int currentCountdown = countdown.getAndDecrement();
 
-            if (currentCountdown > 0 && !dto.isCheck()) {
+            if (currentCountdown > 0 && !dto.isCheck()) {\
                 System.out.println("Room ID: " + roomId + ", Remaining Time: " + currentCountdown + " seconds");
                 dto.setTime(currentCountdown);
                 messagingTemplate.convertAndSend("/topic/game/timer/" + roomId, dto);
@@ -224,7 +234,7 @@ public class ChatController {
                     Member mem = new Member();
                     mem.setUserId(memberDTO.getUserId());
                     mem.setName(memberDTO.getUsername());
-
+                    mem.setProfileImage(userService.getProfileImage(memberDTO.getUserId()));
                     // 첫 번째 멤버인 경우 state를 true로 설정하고, 그 외에는 false로 설정
                     mem.setTurn(isFirstMember);
                     isFirstMember = false; // 첫 번째 멤버가 아니므로 false로 설정
@@ -247,6 +257,7 @@ public class ChatController {
     @MessageMapping("/game/next")
     @SendTo("/topic/game/next")
     public void nextTurn(@Payload String gno) {
+
         try {
             // ObjectMapper 객체 생성
             ObjectMapper objectMapper = new ObjectMapper();
@@ -262,6 +273,7 @@ public class ChatController {
                 if (gameMemberList.getGno().equals(gnoValue)) {
                     GameMemberList targetGameMemberList = new GameMemberList();
                     targetGameMemberList = gameMemberList;
+                    targetGameMemberList.setCount(targetGameMemberList.getCount() + 1);
                     System.out.println("targetGameMemberList = " + targetGameMemberList);
                     if (targetGameMemberList != null) {
                         List<Member> members = targetGameMemberList.getMembers();
@@ -296,11 +308,83 @@ public class ChatController {
         return image;
     }
 
+    @MessageMapping("/game/gameEnd")
+    @SendTo("/topic/game/gameEnd")
+    public void endGame(@Payload EndGameResponseDTO dto) {
+        // gameMembers 리스트에서 gno가 일치하는 GameMemberList 찾기
+        Optional<GameMemberList> optionalGameMemberList = gameMembers.stream()
+                .filter(gameMemberList -> gameMemberList.getGno().equals(dto.getGno()))
+                .findFirst();
+
+        // gno가 일치하는 GameMemberList가 존재하는 경우
+        if (optionalGameMemberList.isPresent()) {
+            GameMemberList gameMemberList = optionalGameMemberList.get();
+            List<Member> members = gameMemberList.getMembers();
+
+            // 각 멤버의 점수 업데이트
+            for (Member member : members) {
+                userService.updateScore(member.getUserId(), member.getPoint());
+            }
+            gameLobbyService.deleteLobby(dto.getGno());
+            Iterator<MemberResponseDTO> iterator = superMember.iterator();
+            Iterator<MemberResponseDTO> memberIterator = member.iterator();
+            Iterator<GameMemberList> gameMemberIterator = gameMembers.iterator();
+
+            // memberList에서 gno가 일치하는 요소 제거
+            while (memberIterator.hasNext()) {
+                MemberResponseDTO member = memberIterator.next();
+                if (member.getGno().equals(dto.getGno())) {
+                    memberIterator.remove();
+                }
+            }
+
+            // gameMemberList에서 gno가 일치하는 요소 제거
+            while (gameMemberIterator.hasNext()) {
+                GameMemberList gameMember = gameMemberIterator.next();
+                if (gameMember.getGno().equals(dto.getGno())) {
+                    gameMemberIterator.remove();
+                }
+            }
+
+            // superMember에서 gno가 일치하는 요소 제거
+            while (iterator.hasNext()) {
+                MemberResponseDTO sumember = iterator.next();
+                if (sumember.getGno().equals(dto.getGno())) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    @MessageMapping("/game/hasntAnswer")
+    @SendTo("/topic/game/hasntAnswer")
+    public void hasntAnswer() {
+        messagingTemplate.convertAndSend("/topic/game/hasntAnswer", true);
+    }
+
     private void removeMemberFromSuperMemberList(List<MemberResponseDTO> superMember, String gno, String userId) {
         Iterator<MemberResponseDTO> iterator = superMember.iterator();
+        Iterator<MemberResponseDTO> memberIterator = member.iterator();
+        Iterator<GameMemberList> gameMemberIterator = gameMembers.iterator();
+
         while (iterator.hasNext()) {
-            MemberResponseDTO member = iterator.next();
-            if (member.getGno().equals(gno) && member.getUserId().equals(userId)) {
+            MemberResponseDTO sumember = iterator.next();
+            if (sumember.getGno().equals(gno) && sumember.getUserId().equals(userId)) {
+                gameLobbyService.deleteLobby(gno);
+                // memberList에서 gno가 일치하는 요소 제거
+                while (memberIterator.hasNext()) {
+                    MemberResponseDTO member = memberIterator.next();
+                    if (member.getGno().equals(gno)) {
+                        memberIterator.remove();
+                    }
+                }
+                // gameMemberList에서 gno가 일치하는 요소 제거
+                while (gameMemberIterator.hasNext()) {
+                    GameMemberList gameMember = gameMemberIterator.next();
+                    if (gameMember.getGno().equals(gno)) {
+                        gameMemberIterator.remove();
+                    }
+                }
                 iterator.remove();
             }
         }
