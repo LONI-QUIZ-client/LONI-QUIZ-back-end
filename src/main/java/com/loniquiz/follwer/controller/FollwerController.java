@@ -35,16 +35,31 @@ public class FollwerController {
                 );
     }
 
-    @GetMapping
+    @GetMapping("/{userId}")
     public ResponseEntity<?> findFollowerList(
-            @AuthenticationPrincipal TokenUserInfo userInfo
+            @PathVariable String userId
     ){
         List<FollwerListResponseDTO> followerList =
-                follwerService.getFollowerList(userInfo.getUserId());
+                follwerService.getFollowerList(userId);
 
         return ResponseEntity.ok()
                 .body(
                         followerList
+                );
+    }
+
+    @PostMapping("/check")
+    public ResponseEntity<?> flag(
+            @RequestBody
+            FollwerRequestDTO dto
+    ){
+
+
+        boolean flag = follwerService.follower(dto);
+
+        return ResponseEntity.ok()
+                .body(
+                        flag
                 );
     }
 }

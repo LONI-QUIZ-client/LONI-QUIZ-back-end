@@ -27,7 +27,13 @@ public class FollwerService {
     public List<FollwerListResponseDTO> saveFollower(FollwerRequestDTO dto){
         User user = findOneUser(dto.getUserId());
 
-        follwerRepository.save(dto.toEnity(user));
+        boolean b = follwerRepository.existsByFollwerId(dto.getFid());
+
+        if (b){
+            follwerRepository.deleteByFollwerId(dto.getFid());
+        }else{
+            follwerRepository.save(dto.toEnity(user));
+        }
 
         return getFollowerList(dto.getUserId());
     }
@@ -35,7 +41,8 @@ public class FollwerService {
 
     // 팔로워 전체 조회
     public List<FollwerListResponseDTO> getFollowerList(String userId){
-        List<Follower> followerList = follwerRepository.findByFollwerId(userId);
+        User user = findOneUser(userId);
+        List<Follower> followerList = follwerRepository.findByUser(user);
 
         List<FollwerListResponseDTO> dtoList = followerList.stream()
                 .map(follower -> new FollwerListResponseDTO(follower))
@@ -50,5 +57,14 @@ public class FollwerService {
     private User findOneUser(String userId){
         User user = userRepository.findById(userId).orElseThrow();
         return user;
+    }
+
+
+    public boolean follower(FollwerRequestDTO dto){
+        User user = findOneUser(dto.getUserId());
+        boolean flag =
+                follwerRepository.existsByFollwerIdAndUser(dto.getFid(), user);
+
+        return flag;
     }
 }

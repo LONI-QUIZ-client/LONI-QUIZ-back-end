@@ -1,7 +1,9 @@
 package com.loniquiz.users.controller;
 
 import com.loniquiz.auth.TokenUserInfo;
+import com.loniquiz.aws.S3Service;
 import com.loniquiz.game.lobby.dto.request.UserSearchRequestDTO;
+import com.loniquiz.users.dto.request.UserImageRequestDTO;
 import com.loniquiz.users.dto.request.UserLoginRequestDTO;
 import com.loniquiz.users.dto.request.UserNewRequestDTO;
 import com.loniquiz.users.dto.response.UserDetailResponseDTO;
@@ -37,7 +39,7 @@ public class UserController {
     private final UserService userService;
 
     @Value("${root.path}")
-    private String rootPath;
+    private String rootPath; // 파일 저장 루트경로
 
 
     // 회원 단일 조회를 위한 컨트롤러
@@ -64,7 +66,7 @@ public class UserController {
             @RequestPart("user") UserNewRequestDTO dto,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
             , BindingResult result
-    ) {
+    ) throws IOException {
         // 입력 값 검증에 걸리면 안 됌 ㅠㅠㅠㅠ
         if (result.hasErrors()) {
             return ResponseEntity.badRequest()
@@ -75,20 +77,13 @@ public class UserController {
 
         String uploadProfileImagePath = null;
 
-        File file = new File(rootPath);
-        if (!file.exists()) file.mkdirs();
-
         if(profileImage!=null){
-            uploadProfileImagePath = FileUtil.uploadFile(profileImage, rootPath);
+            log.info("fileName - {}", profileImage);
+            uploadProfileImagePath = userService.uploadProfileImage(profileImage);
         }
 
         boolean newUser = userService.newUser(dto, uploadProfileImagePath);
 
-
-        /*File file = new File(rootPath);
-        if (!file.exists()) file.mkdirs();
-        String savePath = FileUtil.uploadFile(profileImage, rootPath);
-        boolean newUser = userService.newUser(dto, savePath);*/
 
         log.info("회원가입을 위한 post매핑 접속 dto : {}", dto);
 
@@ -204,71 +199,27 @@ public class UserController {
     ){
         log.info("profile-image/id GET");
 
+        String profilePath = userService.getProfileImage(id);
 
-        try {
-            String profilePath = userService.getProfileImage(id);
-            if(profilePath==null){
-                return ResponseEntity.ok().body(null);
-            }
-
-            File profileFile = new File(rootPath + profilePath);
-            if(!profileFile.exists()) return ResponseEntity.notFound().build();
-
-            byte[] fileDate = FileCopyUtils.copyToByteArray(profileFile);
-
-            HttpHeaders headers = new HttpHeaders();
-
-            MediaType mediaType = extractFileExtension(profilePath);
-
-            if (mediaType == null){
-                return ResponseEntity.internalServerError()
-                        .body("발견된 파일은 이미지가 아닙니다.");
-            }
-
-            headers.setContentType(mediaType);
-
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(fileDate);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok()
+                .body(
+                        profilePath
+                );
     }
 
 
-    @GetMapping("/profile-image")
+    @PostMapping("/profile-image")
     public ResponseEntity<?> loadProfileImage(
-            @AuthenticationPrincipal TokenUserInfo userInfo
+            @RequestBody
+            UserImageRequestDTO dto
             ){
-        try {
-            String profilePath = userService.getProfileImage(userInfo.getUserId());
 
-            File profileFile = new File(rootPath + profilePath);
-            if(!profileFile.exists()) return ResponseEntity.notFound().build();
+        String profilePath = userService.getProfilePath(dto.getUserid());
 
-            byte[] fileDate = FileCopyUtils.copyToByteArray(profileFile);
-
-            HttpHeaders headers = new HttpHeaders();
-
-            MediaType mediaType = extractFileExtension(profilePath);
-
-            if (mediaType == null){
-                return ResponseEntity.internalServerError()
-                        .body("발견된 파일은 이미지가 아닙니다.");
-            }
-
-            headers.setContentType(mediaType);
-
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(fileDate);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok()
+                .body(
+                        profilePath
+                );
     }
 
 
