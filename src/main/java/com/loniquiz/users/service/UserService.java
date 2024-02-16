@@ -14,6 +14,7 @@ import com.loniquiz.users.dto.response.UserSortResponseDTO;
 
 import com.loniquiz.users.entity.User;
 import com.loniquiz.users.repository.UserRepository;
+import com.sun.xml.bind.v2.runtime.output.Encoded;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -143,6 +144,20 @@ public class UserService {
         user.setLoginState(false);
 
         return new UserDetailResponseDTO();
+    }
+
+    // 회원인증
+    public boolean checkMyself(UserLoginRequestDTO dto){
+        Optional<User> userInfo = userRepository.findById(dto.getId());
+
+        if(userInfo.isPresent()){
+            User user = userInfo.get();
+            String storedPw = user.getPw();
+
+            return encoder.matches(dto.getPw(), storedPw);
+        }
+
+        return false;
     }
 
     // 회원 탈퇴 기능

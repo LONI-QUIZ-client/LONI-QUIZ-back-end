@@ -41,7 +41,6 @@ public class UserController {
     @Value("${root.path}")
     private String rootPath; // 파일 저장 루트경로
 
-
     // 회원 단일 조회를 위한 컨트롤러
     @GetMapping("/{id}")
     public ResponseEntity<?> detailUser(@PathVariable String id) {
@@ -158,11 +157,23 @@ public class UserController {
         return ResponseEntity.ok().body(logout);
     }
 
+
     // 회원 탈퇴 컨트롤러
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(
             @PathVariable String id
+            , @RequestBody UserLoginRequestDTO dto
     ) {
+
+        boolean checked = userService.checkMyself(dto);
+
+        if(!checked){
+            return ResponseEntity.badRequest()
+                    .body(
+                      "비밀번호가 알맞지 않음"
+                    );
+        }
+
         boolean flag = userService.delete(id);
 
         if (flag) { // 삭제 정상 처리

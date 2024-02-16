@@ -39,6 +39,7 @@ public class FollwerService {
     }
 
 
+    
     // 팔로워 전체 조회
     public List<FollwerListResponseDTO> getFollowerList(String userId){
         User user = findOneUser(userId);
@@ -47,7 +48,6 @@ public class FollwerService {
         List<FollwerListResponseDTO> dtoList = followerList.stream()
                 .map(follower -> new FollwerListResponseDTO(follower))
                 .collect(Collectors.toList());
-
 
         return dtoList;
     }
