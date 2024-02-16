@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry
-                .addMapping("/**") // 어떤 요청 유알엘을 허용할지
+                .addMapping("/*") // 어떤 요청 유알엘을 허용할지
                 .allowedOrigins("http://localhost:3000", "http://loni-react.s3-website.ap-northeast-2.amazonaws.com") // 어떤 클라이언트를 허용할지
                 .allowedMethods("*") //어떤 요청방식을 허용할지
                 .allowedHeaders("GET", "POST", "PUT", "PATCH", "DELETE") //어떤 헤더를 허용할지
