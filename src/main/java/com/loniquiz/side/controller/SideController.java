@@ -19,7 +19,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/side")
-@CrossOrigin(origins = {"http://localhost:3000"}) // api 접근을 허용할 클라이언트 ip,3000 포트 허용
+//@CrossOrigin(origins = {"http://localhost:3000"}) // api 접근을 허용할 클라이언트 ip,3000 포트 허용
 public class SideController {
 
     private final SideService sideService;
