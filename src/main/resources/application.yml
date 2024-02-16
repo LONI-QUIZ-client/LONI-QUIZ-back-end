@@ -4,15 +4,18 @@ server:
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3307/aiimage
-    username: root
-    password: mariadb
+    #    url: jdbc:mariadb://localhost:3307/aiimage
+#    url: jdbc:mariadb://localhost:3306/aiimage
+    url: jdbc:mariadb://lonigamedb.clsik8mgctc9.ap-northeast-2.rds.amazonaws.com:3306/lonigame
+    username: bumjun2
+#    password: 1234
+    password: wjdqjawns12#
   jpa:
     # SQL??? ?? ? ?? DBMS? ???? ??? ????
     database-platform: org.hibernate.dialect.MariaDB106Dialect
     hibernate:
       # ddl? ???? ??
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true   # SQL ??? ????? ??? ?? ??
@@ -22,3 +25,29 @@ logging:
   level:
     root: info
     org.hibernate.SQL: debug
+
+jwt:
+  secret: M/uO5Lteyy9MOQ/iwsThpR5yi4/R737xT4gZQlqz0xyZSTq3VAmdrcA1uCSx6JZ6cjwJDsFG+LyeX5a3wt28wQ==
+
+root:
+  path: /Users/bum_jun2/Desktop/LONI
+
+# 로그인, 회원가입 랜덤 이미지
+sideMenu:
+  path: /Users/bum_jun2/Desktop/LONI
+
+kakao:
+  kakaoClientID: b11f2fab760f545cb7340313e13ec03b
+  kakaoRedirectURI: http://localhost:3000/user/oauth
+  kakaoClientSecret: YcRztaZO6EUpXdRURxFbYFd4mmSOrqcC
+  kakaoTokenURI: https://kauth.kakao.com/oauth/token
+  kakaoUserInfoURI: https://kapi.kakao.com/v2/user/me
+
+
+aws:
+  credentials:
+    accessKey: AKIAQ3EGUXRPEG5R2M4L
+    secretKey: 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
+  region: ap-northeast-2
+  bucketName: loni-bucket
+

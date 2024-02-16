@@ -1,7 +1,8 @@
 package com.loniquiz.game.lobby.controller;
 
-import com.loniquiz.game.lobby.dto.request.DeleteLobbyDTO;
 import com.loniquiz.game.lobby.dto.request.GameLobbyCreateDTO;
+import com.loniquiz.game.lobby.dto.request.GameRoomRequestDTO;
+import com.loniquiz.game.lobby.dto.response.GameDetailDTO;
 import com.loniquiz.game.lobby.dto.response.GameLobbyListResponseDTO;
 import com.loniquiz.game.lobby.dto.request.PageRequestDTO;
 import com.loniquiz.game.lobby.service.GameLobbyService;
@@ -11,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.rmi.server.ExportException;
 
 @RestController
 @Slf4j
@@ -25,7 +24,7 @@ public class GameLobbyController {
 
     // 게임 방 전체 조회
     @GetMapping
-    public ResponseEntity<?> gameListView(PageRequestDTO dto){
+    public ResponseEntity<?> gameListView(PageRequestDTO dto) {
         GameLobbyListResponseDTO gameLobbies = gameLobbyService.gameAllList(dto);
 
         return ResponseEntity.ok()
@@ -38,12 +37,12 @@ public class GameLobbyController {
     // 방 생성
     @PostMapping
     public ResponseEntity<?> lobbyCreate(
+            PageRequestDTO pageRequestDTO,
             @Validated
             @RequestBody GameLobbyCreateDTO dto,
-            PageRequestDTO pageRequestDTO,
             BindingResult result
-    ){
-        if (result.hasErrors()){
+    ) {
+        if (result.hasErrors()) {
             return ResponseEntity.badRequest()
                     .body(
                             result.getFieldError()
@@ -57,7 +56,7 @@ public class GameLobbyController {
                     .body(
                             gameLobby
                     );
-        }catch(Exception e){
+        } catch (Exception e) {
             log.warn("방 생성중 서버 에러 : {}", e.getMessage());
             return ResponseEntity.internalServerError()
                     .body(
@@ -72,7 +71,7 @@ public class GameLobbyController {
             @PathVariable String gno,
             @PathVariable String userId,
             PageRequestDTO pageRequest
-    ){
+    ) {
 
         try {
             GameLobbyListResponseDTO gameList = gameLobbyService.deleteLobby(gno, userId, pageRequest);
@@ -81,11 +80,12 @@ public class GameLobbyController {
                     .body(
                             gameList
                     );
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("내뇌 내놔 아이디랑 게임 아이디");
             return ResponseEntity.internalServerError()
                     .body(e.getMessage());
         }
     }
-
 }
+
+

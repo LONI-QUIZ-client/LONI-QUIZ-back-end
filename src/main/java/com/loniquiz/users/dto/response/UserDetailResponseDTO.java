@@ -17,12 +17,14 @@ public class UserDetailResponseDTO {
     private String nickname; // 회원 닉네임
     private String createDate; // 회원 가입 일자
     private int score; // 회원 점수
+    private boolean loginState; // 회원 로그인 상태
     
     public UserDetailResponseDTO(User user){
         this.id = user.getId();
         this.pw = user.getPw();
         this.nickname = user.getNickname();
         this.createDate = DateChangeUtil.postDateChang(user.getCreateDate());
+        this.loginState = user.isLoginState();
         this.score = user.getScore();
     }
 }

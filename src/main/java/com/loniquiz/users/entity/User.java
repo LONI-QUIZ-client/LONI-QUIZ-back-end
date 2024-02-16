@@ -1,9 +1,11 @@
 package com.loniquiz.users.entity;
-
-import com.loniquiz.game.lobby.entity.LobbyChat;
-import com.loniquiz.game.room.entity.GameRoom;
+import com.loniquiz.comment.lobby.entity.LobbyChat;
+import com.loniquiz.follwer.entity.Follower;
+import com.loniquiz.game.members.entity.GameMembers;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Setter @Getter
-@ToString
+@ToString(exclude = {"gameRooms", "lobbyChats", "followers"})
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,11 +47,18 @@ public class User {
     private String sessionId; // 자동 로그인을 위한 세션 아이디
 
     @Column(name = "profile_image")
-    private String profileImage; // 사용자 프로필 이미
+    private String profileImage; // 사용자 프로필 이미지
+
+    @Column(name = "login_state")
+    @ColumnDefault("false")
+    private boolean loginState; // 로그인 상태
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<GameRoom> gameRooms = new ArrayList<>();
+    private List<GameMembers> gameRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<LobbyChat> lobbyChats = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Follower> followers = new ArrayList<>();
 }
