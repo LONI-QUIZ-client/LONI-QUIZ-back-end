@@ -103,8 +103,6 @@ public class ChatController {
     @MessageMapping("/game/members")
     @SendTo("/topic/game/members")
     public String gameSendMembers(@Payload MemberResponseDTO dto) {
-
-
         // 같은 gno를 가진 사용자 수를 세기 위한 변수
         int countSameGnoUsers = 0;
 
